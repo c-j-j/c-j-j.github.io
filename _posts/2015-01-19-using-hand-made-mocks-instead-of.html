@@ -1,0 +1,12 @@
+---
+layout: post
+title: Using hand-made mocks instead of a framework
+date: '2015-01-19T09:26:00.001-08:00'
+author: Chris Jordan
+tags: 
+modified_time: '2015-01-19T09:26:01.708-08:00'
+blogger_id: tag:blogger.com,1999:blog-7991013704143924726.post-6892030427839448092
+blogger_orig_url: http://chrisjordan8l.blogspot.com/2015/01/using-hand-made-mocks-instead-of.html
+---
+
+When I wrote predominantly Java code, I used JMock to mock dependencies in my unit tests. When working with simple interfaces where you expect the method to always return the same result, this works pretty well.&nbsp;<div><br /></div><div>JMock however becomes more problematic when the objects you are mocking start to become a bit more complex. For example, if you want a mock object to respond differently to subsequent method calls, &nbsp;you'll need to program that in using the mock libraries DSL.</div><div><br /></div><div>A far simpler approach is to build the mock objects yourself. It really doesn't take much effort to have a mock object with a queue of responses, whereby each invocation simply pops from the front of the queue. These hand made mock objects are very easy to write and understand, and do not require you to dive into a mock library's documentation to find the right incantation on how to achieve complex tasks.</div>

@@ -1,0 +1,12 @@
+---
+layout: post
+title: 'TicTacToe: Validating User Input using Ruby Blocks'
+date: '2015-01-29T01:05:00.004-08:00'
+author: Chris Jordan
+tags: 
+modified_time: '2015-01-29T01:05:48.334-08:00'
+blogger_id: tag:blogger.com,1999:blog-7991013704143924726.post-1586024642926874841
+blogger_orig_url: http://chrisjordan8l.blogspot.com/2015/01/tictactoe-validating-user-input-using.html
+---
+
+When interacting with a user, it is important to validate all the user input that is coming in, and decide whether further input is required if the user has failed to provide valid input.<br /><br />With my TicTacToe game, there are several instances where user input is needed;<br /><br />1. Decide on game type (Human vs Human, Computer vs Human, etc)<br />2. Decide on board size<br />3. Pick move (integer from 1-9 for 3x3 board)<br /><br />I had coded 1 and 3 first, and initially had two very similar looking methods that had the following algorithm;<br /><br />while true<br />&nbsp; &nbsp; input = get_user_input<br />&nbsp; &nbsp; break if valid?(input)<br />&nbsp; &nbsp; print invalid input message<br /><br />When I had written the third method, it was the 3rd strike and refactoring had to be done. The only part of the algorithm that varied for each method was the <b>valid() </b>method, the rest was identical.<br /><br />In Java 8 I would pass a predicate to perform the validation. In Ruby, blocks seem to be a quick and ideal solution for this kind of refactoring. I want to invoke a method but wrap a piece of functionality into a surrounding algorithm.<br /><br />I was able to achieve this as follows;<br /><br /><pre style="white-space: pre-wrap; word-wrap: break-word;">def get_validated_user_input<br />  while true<br />    input = get_user_input<br />    break if yield(input)<br />    print_invalid_message<br />  end<br />  input<br />end<br /><br />user_move = get_validated_user_input {|input| move_valid?(input, board)}<br />board_size = get_validated_user_input {|input| board_size_valid?(input, board_size_options)}<br /></pre><div><br /></div><a href="https://gist.github.com/c-j-j/60a3d73548439bafaaf2#file-using-blocks-for-user-validation">Using blocks for user validation</a><br /><br />

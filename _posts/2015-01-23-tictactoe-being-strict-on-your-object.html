@@ -1,0 +1,13 @@
+---
+layout: post
+title: 'TicTacToe: Being strict on your object dependencies'
+date: '2015-01-23T08:28:00.000-08:00'
+author: Chris Jordan
+tags: 
+modified_time: '2015-01-23T08:28:13.984-08:00'
+thumbnail: http://2.bp.blogspot.com/-M9m1PgyKVe8/VMJv9NnNAVI/AAAAAAAAABg/Gcu0h9g_bcg/s72-c/TTT-Design1.jpg
+blogger_id: tag:blogger.com,1999:blog-7991013704143924726.post-629481321502082620
+blogger_orig_url: http://chrisjordan8l.blogspot.com/2015/01/tictactoe-being-strict-on-your-object.html
+---
+
+One of the most difficult things that I've had to adapt to whilst doing the TicTacToe exercise is having suitable dependencies between the various objects. I had put some effort into keeping objects decoupled, and my initial plan had a small design with neat single directional arrows from one object to another. However here's the object structure when I had finished developing the first version (In fact after reviewing this, there were even more dependencies between these objects);<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-M9m1PgyKVe8/VMJv9NnNAVI/AAAAAAAAABg/Gcu0h9g_bcg/s1600/TTT-Design1.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-M9m1PgyKVe8/VMJv9NnNAVI/AAAAAAAAABg/Gcu0h9g_bcg/s1600/TTT-Design1.jpg" height="320" width="181" /></a></div><br />As we can see, many objects are dependent on each other, and things that shouldn't be coupled are linked. One example of this is the Board depending on the Player object. Initially this made perfect sense to me, a board should track the positions of players. The problem is the players are also aware of the board, so we have two objects that both depend on each other. Any change to the Player may result in a change to Board, and vice versa. The Board is more or less a data structure, yet now it is bound to one of the elements it is storing. What is the problem with this? Tightly coupled code is harder to change, and any large changes can lead to a substantial amount of unweaving so your tests are all green again. You may even have to perform some shotgun surgery.<br /><br />The thing I've took away from this is that whenever you are passing one object (particularly when you are passing the object in as a method argument), you really need to think about how that couples the two objects. Draw out the dependencies and think about how changes to one object is going to affect another. It'll lead to less pain later on when you need to refactor your code.<br /><br />

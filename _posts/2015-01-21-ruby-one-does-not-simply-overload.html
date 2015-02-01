@@ -1,0 +1,12 @@
+---
+layout: post
+title: 'Ruby : One does not simply overload methods'
+date: '2015-01-21T01:30:00.002-08:00'
+author: Chris Jordan
+tags: 
+modified_time: '2015-01-21T01:30:15.723-08:00'
+blogger_id: tag:blogger.com,1999:blog-7991013704143924726.post-64841274573222360
+blogger_orig_url: http://chrisjordan8l.blogspot.com/2015/01/ruby-one-does-not-simply-overload.html
+---
+
+One of the things I'm enjoying the most when it comes to coding in ruby is the sheer variety of ways you can do a particular task. Coming from a Java background, having this flexible so far has been a joy.<br /><br />However, when I tried to do something that seemed so natural to me, which was overriding a method/constructor, ruby threw an error saying I hadn't provided the correct number of arguments.<br /><br />The following gist contains the first incorrect way in which I initially tried to do this;<br /><br /><a href="https://gist.github.com/c-j-j/a253468ad2624e4973f7">Github Gist</a><br /><br />Instead of defining two separate constructors/methods, you need to be more clever in your approach. You will instead need to define a single method/constructor and then use a splat operator or default values in order to expose different ways of invoking them. I feel this results in more complex single methods/constructors compared to &nbsp;separate methods.

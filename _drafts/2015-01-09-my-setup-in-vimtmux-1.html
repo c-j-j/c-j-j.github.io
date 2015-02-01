@@ -1,0 +1,13 @@
+---
+layout: post
+title: My setup in vim/tmux - 1
+date: '2015-01-09T09:19:00.000-08:00'
+author: Chris Jordan
+tags: 
+modified_time: '2015-01-09T09:19:22.496-08:00'
+thumbnail: http://4.bp.blogspot.com/-ZdJ3X1QiSPQ/VLAAIkx7H5I/AAAAAAAAAAk/RCsWsvVjG2Q/s72-c/Screen%2BShot%2B2015-01-09%2Bat%2B16.18.41.png
+blogger_id: tag:blogger.com,1999:blog-7991013704143924726.post-1068512052948514067
+blogger_orig_url: http://chrisjordan8l.blogspot.com/2015/01/my-setup-in-vimtmux-1.html
+---
+
+This series of posts will go through some setup/plugins I've installed for tmux and vim that may help your productivity.<br /><br />Here is one of the windows I currently have fortmux to do Ruby development. Two panes to the left for unit test and production code, and one on the right for test output;<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-ZdJ3X1QiSPQ/VLAAIkx7H5I/AAAAAAAAAAk/RCsWsvVjG2Q/s1600/Screen%2BShot%2B2015-01-09%2Bat%2B16.18.41.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://4.bp.blogspot.com/-ZdJ3X1QiSPQ/VLAAIkx7H5I/AAAAAAAAAAk/RCsWsvVjG2Q/s1600/Screen%2BShot%2B2015-01-09%2Bat%2B16.18.41.png" height="207" width="320" /></a></div>Before I describe my setup in vim/tmux, I do have the plugins vim-sensible and tmux-sensible to add some basic common settings.<br /><br />I save my setup this using the plugin <b>tmux-resurrect </b>so that next time I come restart my laptop I can immediate continue with my work.<br /><br />I've added the following options in the ~/.tmux.conf file;<br /><br />1. enable mouse scrolling (useful for scrolling test output);<br /><br /><div>set -g mode-mouse on</div><div><br /></div><div>2. change tmux prefix from control b to control-a as it's more comofrtable.</div><div><br /></div><div>unbind C-b</div><div>set -g prefix C-a</div><div><br /></div><div>3. Set up new windows and panes to open in same working directory as you are working on.</div><div><br /></div><div><div style="font-family: -apple-system-font; font-size: 12px; line-height: 16px;">bind '"' split-window -c "#{pane_current_path}"</div><div style="font-family: -apple-system-font; font-size: 12px; line-height: 16px;">bind % split-window -h -c "#{pane_current_path}"</div><div style="font-family: -apple-system-font; font-size: 12px; line-height: 16px;">bind c new-window -c "#{pane_current_path}"</div></div>
