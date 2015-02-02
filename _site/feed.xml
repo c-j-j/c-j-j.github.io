@@ -6,9 +6,60 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 02 Feb 2015 16:14:09 +0000</pubDate>
-    <lastBuildDate>Mon, 02 Feb 2015 16:14:09 +0000</lastBuildDate>
+    <pubDate>Mon, 02 Feb 2015 16:55:46 +0000</pubDate>
+    <lastBuildDate>Mon, 02 Feb 2015 16:55:46 +0000</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Vim: Refactoring class &amp; method names</title>
+        <description>&lt;p&gt;I’m going to be honest with you, I switched from using IntelliJ to vim nearly a month ago, and there are still things I miss on an IDE. What makes IntelliJ so powerful is the ability to refactor and rename class/method names with one shortcut key. Admittidly, Java makes this easier for the IDE than a dynamic language like Ruby due to its static typing. However when you’re accustomed to an IDE doing all of the work for you, it can feel like an uphill struggle to switch over to vim.&lt;/p&gt;
+
+&lt;p&gt;This post will be fairly short, and will cover a workflow I’ve found to work reasonably well when it comes to renaming class and method names in Ruby. Before we continue, I am aware that a lot of developers do successfully use sed to rename classes/methods. However I didn’t particularly like sed for two reasons;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;You need to be careful when changing method names that are fairly common. For this reason, I sometimes want to check before each replacement. I’m assuming this is possible with sed, but I never got to that point. &lt;/li&gt;
+  &lt;li&gt;I didn’t like having to come out of vim to edit the text that I am currently working with. It means I have to copy a method name to the clipboard, and paste that into sed later on.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The workflow that I am currently using is as follows, and works for renaming class and method names. Lets rename a method called ‘some_method’ to ‘new_method’;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Using the &lt;a href=&quot;https://github.com/tpope/vim-fugitive&quot;&gt;fugitive&lt;/a&gt; plug-in, place the cursor over the method you want to replace, and type &lt;code&gt;:Ggrep Control-R Control-W&amp;gt;&lt;/code&gt;. This uses git grep to search in your project for a particular string. Control-R Control W pastes in the word currently under the cursor. Quick tip: Create a keyboard mapping in your vimrc to do this, it’ll save you time later on.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Ggrep populates the quickfix list with all references to the string you just searched for. With the &lt;a href=&quot;https://github.com/nelstrom/vim-qargs&quot;&gt;qargs&lt;/a&gt; plugin installed, type &lt;code&gt;:Qargs&lt;/code&gt;. This will copy the Quickfix list into the vim arg list.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Next, we will use the argdo command to perform a command on all files in the args list. Type the following to do the substitution &lt;code&gt;:argdo %s/some_method/new_method/gc&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;The ‘c’ flag at the end is important, as you can decide whether or not you want to rename a particular string. Use the instructions prompted in vim to decide whether a particular string should be subsituted. &lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;To rename a class, you first can follow the steps above the rename the ClassName and class_file_name, and then do the following to move the file such that git will track it;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Go to the file you want to rename&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Gmove path/to/destination.rb&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        <pubDate>Mon, 02 Feb 2015 09:20:57 +0000</pubDate>
+        <link>http://yourdomain.com/vim/refactoring/2015/02/02/vim-refactoring.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/vim/refactoring/2015/02/02/vim-refactoring.html</guid>
+        
+        
+        <category>vim</category>
+        
+        <category>refactoring</category>
+        
+      </item>
     
       <item>
         <title>TicTacToe: Extracting the winning lines with Ruby</title>
@@ -169,16 +220,6 @@ WINNING POSITIONS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], ...]
         <pubDate>Thu, 15 Jan 2015 09:17:00 -0800</pubDate>
         <link>http://yourdomain.com/2015/01/15/test-driving-taking-small-steps.html</link>
         <guid isPermaLink="true">http://yourdomain.com/2015/01/15/test-driving-taking-small-steps.html</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Ruby: Testing with a dynamic language</title>
-        <description>During this post, I want to pick out some differences I&#39;ve found (and am enjoying) when it comes to unit testing with a dynamic language such as ruby.&amp;nbsp;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;Today I was writing a unit test in ruby to put elements into a simple data structure, and ensuring I can extract the element after. With a statically typed language such as Java, this is where you want to think about what type the method will take, i.e. whether you want it to be a generic type or maybe you&#39;ll be creating a new interface that the method will take, etc. Then you will want to create an object in your unit test that conforms to this type and will inject this into the method.&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;I was pleasantly surprised at how none of this was required today, it doesn&#39;t matter what particular type I want to work with during my test. The method takes any object and will stash it away for later retrieval, no methods are invoked on the injected object. I ended up using a String for this, even though later on a more complex object will be stored in this data object. The end result is far simpler code in both the unit test and production code.&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;When it comes to invoking methods on the injected object, this is where I was initially thinking, &quot;Now I need my Java interfaces, how can I ensure whoever uses this method will inject in the right type&quot;. When it comes to ruby, there are no warnings when injecting an object that is missing the method that&#39;ll be invoked. It expects you to do the honourable thing and thoroughly test your code and makes you as a developer responsible putting in the correct object.&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;This is a nice change for me. Previously, I&#39;ve worked with Java methods that may take in some interface which have several methods defined, even though only one or two of them are only being used once injected in. In my unit test, I would either have to mock this interface, or create an anonymous inner class where there is a dummy implementation for each method in that interface. Although better design may get around this mess, it does still highlight one of the many ways why ruby is easier to work with in places.&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;</description>
-        <pubDate>Wed, 14 Jan 2015 09:51:00 -0800</pubDate>
-        <link>http://yourdomain.com/2015/01/14/ruby-testing-with-dynamic-language.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/2015/01/14/ruby-testing-with-dynamic-language.html</guid>
         
         
       </item>
