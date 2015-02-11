@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 10 Feb 2015 13:08:44 +0000</pubDate>
-    <lastBuildDate>Tue, 10 Feb 2015 13:08:44 +0000</lastBuildDate>
+    <pubDate>Wed, 11 Feb 2015 21:05:29 +0000</pubDate>
+    <lastBuildDate>Wed, 11 Feb 2015 21:05:29 +0000</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -58,6 +58,64 @@
         <category>ruby</category>
         
         <category>rack</category>
+        
+      </item>
+    
+      <item>
+        <title>Web Based Tic Tac Toe: Stateful vs Stateless</title>
+        <description>&lt;h1 id=&quot;the-requirement&quot;&gt;The Requirement&lt;/h1&gt;
+
+&lt;p&gt;Over the past couple of weeks, I was assigned the task of extending my Tic Tac Toe game such that it can be played in a web browser. This required a fairly significant refactor of my core game logic in order to facilitate this change. Moreover, I had to extract the game loop out of my Game object and instead have the browser (or Command Line or GUI) drive the game forward.&lt;/p&gt;
+
+&lt;p&gt;There was one particularly tricky aspect of this task, the solution had to be &lt;strong&gt;as simple as possible&lt;/strong&gt;. Usually when I’m building web apps, I’m using a framework like Django, front end JavaScript libraries such as JQuery/AngularJS, and a plethora of other tools to achieve what I want. Just by using Rack and not using JavaScript has been a fun and educational experience.&lt;/p&gt;
+
+&lt;p&gt;Note that my actual game of Tic Tac Toe supported the ability to choose a type of game (human vs computer, etc), and a board size. However for simplicity, I’ve not included that here and we are assuming we are working with a single game type and board size.&lt;/p&gt;
+
+&lt;h1 id=&quot;approach-one-stateful-backend&quot;&gt;Approach One: Stateful backend&lt;/h1&gt;
+
+&lt;p&gt;My first approach was to have all of the state at the backend. To set the scene, here is how my Tic Tac Toe works.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/tictactoe.png&quot; alt=&quot;Tic Tac Toe Diagram&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;To have a stateful backend, the Game was only created once at the start of the game. Once the game was created, this could then be stored in the session.&lt;/p&gt;
+
+&lt;p&gt;For subsequent moves, the following could then be carried out;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Retrieve game from the session&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Check if move is valid&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Register the new move with the game&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Store the game back in the session&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;When a user made a move, that was placed in a query parameter that my Controller could handle.&lt;/p&gt;
+
+&lt;p&gt;Now I’m aware that storing object references in the session is perhaps not the greatest idea. In Rails, you aren’t even able to store object references in sessions. Why did I do this? Because it’s the simplest thing I could come up with that’ll work.&lt;/p&gt;
+
+&lt;p&gt;The disadvantage with having the game stored in the session like this is that the user will not be able to play multiple games of TicTacToe at any one time. &lt;/p&gt;
+
+&lt;h1 id=&quot;approach-two-stateless-backend&quot;&gt;Approach Two: Stateless Backend&lt;/h1&gt;
+
+&lt;p&gt;The second approach was to adopt a more stateless backend, and having the state required for the gameplay transmitted via Query Parameters.&lt;/p&gt;
+
+&lt;p&gt;Along with the user’s move transmitted via a query parameter, the current board is also stored as a query parameter, and is passed in with every request. The Controller now has more work to do, rather than retrieve an existing game from the session, it must now construct the game for every request. The downside to this approach is now the Controller has to be aware of how to construct a Board which can be given to the Game.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 11 Feb 2015 09:20:57 +0000</pubDate>
+        <link>http://yourdomain.com/web/tictactoe/2015/02/11/tictactoe_approaches.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/web/tictactoe/2015/02/11/tictactoe_approaches.html</guid>
+        
+        
+        <category>web</category>
+        
+        <category>tictactoe</category>
         
       </item>
     
@@ -251,16 +309,6 @@ WINNING POSITIONS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], ...]
         <pubDate>Mon, 19 Jan 2015 09:26:00 -0800</pubDate>
         <link>http://yourdomain.com/2015/01/19/using-hand-made-mocks-instead-of.html</link>
         <guid isPermaLink="true">http://yourdomain.com/2015/01/19/using-hand-made-mocks-instead-of.html</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Book Review: Eloquent Ruby by Russ Olsen</title>
-        <description>&lt;span style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif;&quot;&gt;Prior to joining 8th Light, I had only dabbled with Ruby by learning&amp;nbsp;the syntax online and doing a few coding katas in my spare time. Although the syntax is mostly easy to understand, the one thing that really concerned me back then is the sheer variety of ways you can achieve something in Ruby. Do you use do/end or curly braces for blocks? Do you include the brackets when invoking a method? Variety is indeed one of ruby&#39;s strengths, however to a beginner it is&amp;nbsp;somewhat difficult to&amp;nbsp;know which way is the most idiomatic style of coding, and that can make the language seem more difficult than it perhaps is.&lt;/span&gt;&lt;br /&gt;&lt;span style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;span style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif;&quot;&gt;Russ Olsen&#39;s Eloquent Ruby answered many of the questions I had asked myself when I originally looked at ruby several months ago. &amp;nbsp;Rather than just formally describing the whole Ruby syntax at the start of the book (which I have seen in many programming books), it is instead structured in sections that describe a certain part of the language (i.e. conditions, blocks, metaprogramming, etc). It describes what idiomatic Ruby code looks like, as well as the reason why rubyists choose to do things the way they do.&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;&lt;span style=&quot;color: #444444; font-family: Arial, Helvetica, sans-serif;&quot;&gt;Not only does it provide a gold mine of information, but its style is also highly engaging which makes it very easy to consume. I&#39;d highly recommend this to anyone who is just starting out on ruby and needs a bit of clarity on how to write idiomatic ruby.&amp;nbsp;&lt;/span&gt;</description>
-        <pubDate>Fri, 16 Jan 2015 08:02:00 -0800</pubDate>
-        <link>http://yourdomain.com/2015/01/16/book-review-eloquent-ruby-by-russ-olsen.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/2015/01/16/book-review-eloquent-ruby-by-russ-olsen.html</guid>
         
         
       </item>
