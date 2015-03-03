@@ -6,9 +6,60 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 11 Feb 2015 21:05:29 +0000</pubDate>
-    <lastBuildDate>Wed, 11 Feb 2015 21:05:29 +0000</lastBuildDate>
+    <pubDate>Tue, 03 Mar 2015 11:04:35 +0000</pubDate>
+    <lastBuildDate>Tue, 03 Mar 2015 11:04:35 +0000</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>JavaScript: Module Pattern</title>
+        <description>&lt;p&gt;During the last week, I have been writing pure JavaScript for the first time. I used to rely on third-party libraries/frameworks like AngularJS and JQuery.&lt;/p&gt;
+
+&lt;p&gt;I was fairly happy with my initial attempt, and had used prototypes to define several objects.&lt;/p&gt;
+
+&lt;p&gt;However, having read the book &lt;strong&gt;JavaScript: The Good Parts&lt;/strong&gt; and studying the JavaScript language a little more, I am now seriously unhappy with my code having reviewed it.&lt;/p&gt;
+
+&lt;p&gt;The major problems I have with it is that some functions are declared in the global namespace which causes odd behaviour when you have methods with the same name. My codebase is fairly small, and I still experienced conflicts with my code.&lt;/p&gt;
+
+&lt;p&gt;The easiest way to avoid the global namespace is to use the module pattern. I won’t go into detail here on how it works, as there are far better resources out there that explain it very well indeed.&lt;/p&gt;
+
+&lt;p&gt;The crux of the module pattern is to use anonymous, immediately executed javascript functions that return the object that you want to create.&lt;/p&gt;
+
+&lt;p&gt;The following code is plagiarized from &lt;a href=&quot;http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MODULE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;privateVariable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;privateMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;moduleProperty&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;moduleMethod&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}());&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The advantage of this pattern is having objects with private methods and their own internal state.&lt;/p&gt;
+
+&lt;p&gt;CoffeeScript does something similar when it compiles down to JavaScript.&lt;/p&gt;
+
+&lt;p&gt;This is a pattern I can see myself using from now on, and does solve what is a nasty design flaw in JavaScript which is the global namespace&lt;/p&gt;
+</description>
+        <pubDate>Tue, 03 Mar 2015 09:20:57 +0000</pubDate>
+        <link>http://yourdomain.com/javascript/module/pattern/2015/03/03/javascript-modules.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/javascript/module/pattern/2015/03/03/javascript-modules.html</guid>
+        
+        
+        <category>javascript</category>
+        
+        <category>module</category>
+        
+        <category>pattern</category>
+        
+      </item>
     
       <item>
         <title>Ruby and Rack: Working with session</title>
@@ -58,6 +109,48 @@
         <category>ruby</category>
         
         <category>rack</category>
+        
+      </item>
+    
+      <item>
+        <title>Tictactoe_presenter</title>
+        <description>
+&lt;hr /&gt;
+&lt;p&gt;layout: post
+title:  “Tic Tac Toe: Using the Presenter Pattern”
+date:   2015-02-12 09:20:57
+categories: tictactoe design patterns
+—
+The Problem
+=============
+My first Tic Tac Toe Game used a command line interface to display the board. I had a CommandLineInterface class which had a means of translating game state to user friendly messages.&lt;/p&gt;
+
+&lt;p&gt;I then extended this Tic Tac Toe to use a GUI display as well, and again had methods that would translate game state to messages that can be displayed to the user. Rule 3 in &lt;a href=&quot;http://c2.com/cgi/wiki?XpSimplicityRules&quot;&gt;The Four Rules of Simple Design&lt;/a&gt; states no duplication. I knew I was going against this, but didn’t want to put UI specific logic in my Game class, and didn’t want the different interfaces to depend on each other.&lt;/p&gt;
+
+&lt;p&gt;My third and fourth attempt at Tic Tac Tac was to work as a web app with Rack/Rails respectively. More UI logic had to be added here, i.e. CSS styling to size the board cells correctly, whether or not the page should be refreshed based on if the computer player is going next, and so on. Even though the Rack/Rails projects were in different code bases and were sharing the same gem, it felt wrong to copy and paste this UI logic among projects.&lt;/p&gt;
+
+&lt;h1 id=&quot;the-solution&quot;&gt;The Solution&lt;/h1&gt;
+
+&lt;p&gt;I didn’t want any UI logic in my Game class as that’ll violate the Single Responsibility Principle, nor did I want the various interfaces to depend on each other. The solution I used for this was the &lt;a href=&quot;http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter&quot;&gt;Presenter Pattern&lt;/a&gt;. I created a GamePresenter which did the following;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Determined whether a computer player was going next (which could be used to issue a page refresh)&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Determined the size of the cells that’ll be displayed in the web based UIs&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Determined what status should be displayed to the user, based on the game state&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The result is that all of this UI logic is defined only once. More importantly my web controllers are thin, devoid of too much business logic, which are accompanied with small unit tests.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 12 Feb 2015 00:00:00 +0000</pubDate>
+        <link>http://yourdomain.com/2015/02/12/tictactoe_presenter.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2015/02/12/tictactoe_presenter.html</guid>
+        
         
       </item>
     
@@ -290,26 +383,6 @@ WINNING POSITIONS = [[0, 1, 2], [3, 4, 5], [6, 7, 8], ...]
         <category>jekyll</category>
         
         <category>update</category>
-        
-      </item>
-    
-      <item>
-        <title>Ruby : One does not simply overload methods</title>
-        <description>One of the things I&#39;m enjoying the most when it comes to coding in ruby is the sheer variety of ways you can do a particular task. Coming from a Java background, having this flexible so far has been a joy.&lt;br /&gt;&lt;br /&gt;However, when I tried to do something that seemed so natural to me, which was overriding a method/constructor, ruby threw an error saying I hadn&#39;t provided the correct number of arguments.&lt;br /&gt;&lt;br /&gt;The following gist contains the first incorrect way in which I initially tried to do this;&lt;br /&gt;&lt;br /&gt;&lt;a href=&quot;https://gist.github.com/c-j-j/a253468ad2624e4973f7&quot;&gt;Github Gist&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;Instead of defining two separate constructors/methods, you need to be more clever in your approach. You will instead need to define a single method/constructor and then use a splat operator or default values in order to expose different ways of invoking them. I feel this results in more complex single methods/constructors compared to &amp;nbsp;separate methods.</description>
-        <pubDate>Wed, 21 Jan 2015 01:30:00 -0800</pubDate>
-        <link>http://yourdomain.com/2015/01/21/ruby-one-does-not-simply-overload.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/2015/01/21/ruby-one-does-not-simply-overload.html</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Using hand-made mocks instead of a framework</title>
-        <description>When I wrote predominantly Java code, I used JMock to mock dependencies in my unit tests. When working with simple interfaces where you expect the method to always return the same result, this works pretty well.&amp;nbsp;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;JMock however becomes more problematic when the objects you are mocking start to become a bit more complex. For example, if you want a mock object to respond differently to subsequent method calls, &amp;nbsp;you&#39;ll need to program that in using the mock libraries DSL.&lt;/div&gt;&lt;div&gt;&lt;br /&gt;&lt;/div&gt;&lt;div&gt;A far simpler approach is to build the mock objects yourself. It really doesn&#39;t take much effort to have a mock object with a queue of responses, whereby each invocation simply pops from the front of the queue. These hand made mock objects are very easy to write and understand, and do not require you to dive into a mock library&#39;s documentation to find the right incantation on how to achieve complex tasks.&lt;/div&gt;</description>
-        <pubDate>Mon, 19 Jan 2015 09:26:00 -0800</pubDate>
-        <link>http://yourdomain.com/2015/01/19/using-hand-made-mocks-instead-of.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/2015/01/19/using-hand-made-mocks-instead-of.html</guid>
-        
         
       </item>
     
