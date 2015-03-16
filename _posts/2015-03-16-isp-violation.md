@@ -18,25 +18,21 @@ When you override a method in an interface to only return a null response, or th
 
 Initially, my TicTacToe used a CommandLineInterface, so I had an interface that looked like this;
 
-<code>
-public interface:
-
+{% highlight java %}
+public interface UserInterface:
   int getUserMove();
-
   void printError();
-
   void printOutcome();
-</code>
+{% endhighlight %}
 
 This worked fine for my CommandLineInterface, as when it was the human players turn, we requested that they enter their move.
 
 The next feature came along to add a GUI client. I reused this interface, but did the following;
 
-<code>
+{% highlight java %}
 int getUserMove()
-
   return MOVE_NOT_AVAILABLE
-</code>
+{% endhighlight %}
 
 This is undoubtedly a hack. With a GUI client, moves are not requested by the user, but instead the user submits a move when they are ready. The user drives the game forward and we used an event driven architecture to achieve this by using another function.
 
@@ -44,18 +40,14 @@ The point is that CommandLineInterface and GUIInterface do not share the same be
 
 So, how would we fix this? One way could be that we need two interfaces;
 
-<code>
+{% highlight java %}
   public interface synchronousInterface
-
     int getUserMove()
 
   public interface UserInterface
-
     void printError();
-
     void printOutcome();
-
-</code>
+{% endhighlight %}
 
 Now we have segregated the interfaces, the GUI interface can implement methods only included in the <code>UserInterface</code>.
 
