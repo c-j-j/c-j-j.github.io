@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "To Mock Or To Stub"
-date:   2015-03-11 09:20:57
+date:   2015-03-13 09:20:57
 categories: mock stub
 ---
 When it comes to unit testing an object that has collaborators, it is necessary to use either a mock or a stub.
