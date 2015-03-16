@@ -20,8 +20,11 @@ Initially, my TicTacToe used a CommandLineInterface, so I had an interface that 
 
 <code>
 public interface:
+
   int getUserMove();
+
   void printError();
+
   void printOutcome();
 </code>
 
@@ -31,6 +34,7 @@ The next feature came along to add a GUI client. I reused this interface, but di
 
 <code>
 int getUserMove()
+
   return MOVE_NOT_AVAILABLE
 </code>
 
@@ -42,11 +46,15 @@ So, how would we fix this? One way could be that we need two interfaces;
 
 <code>
   public interface synchronousInterface
+
     int getUserMove()
 
   public interface UserInterface
+
     void printError();
+
     void printOutcome();
+
 </code>
 
 Now we have segregated the interfaces, the GUI interface can implement methods only included in the <code>UserInterface</code>.
