@@ -22,6 +22,6 @@ def Storage
 
 I only had to change two lines of production code to change the storage mechanism for the entire site.
 
-I've done this far more lately. Wrapping any functions (third party or otherwise) that are called in several times in a class/helper function really helps when we have to change something.
+I've done this far more lately. Wrapping any functions (third party or otherwise) that are called in several places in a class/helper function really helps when we have to change something.
 
-Only having to change one method in one class is very satisfying and time consuming.
+Only having to change one method like this is very satisfying and saves a lot of time.
