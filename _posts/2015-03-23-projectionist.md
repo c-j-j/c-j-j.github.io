@@ -1,12 +1,11 @@
 ---
 layout: post
-title:  Vim: Projectionist
+title:  Vim Projectionist
 date:   2015/03/23
-categories: 
+categories: vim
 ---
 
 Vim: Projectionist
-========
 
 A really useful plugin that I have recently been working with is [vim projectionist](https://github.com/tpope/vim-projectionist).
 
@@ -20,7 +19,7 @@ There's other things you can do as well. If you use [vim dispatch](https://githu
 
 Here is .projections.json file I have configured for a ruby project;
 
-<code>
+{% highlight json %}
 {
   "*": {"make": "rake"},
   "spec/*_spec.rb": {
@@ -31,7 +30,7 @@ Here is .projections.json file I have configured for a ruby project;
     "alternate": "spec/{}_spec.rb"
   }
 }
-</code>
+{% endhighlight %}
 
 If I'm on a file under <code>spec</code> and I run <code>Dispatch</code>, it'll run rspec on the current file. If I'm on some production code under <code>lib</code>, it'll run the dispatch task on the alternate file, which in this case will run rspec on the spec.
 
