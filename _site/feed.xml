@@ -6,9 +6,80 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 23 Mar 2015 17:20:35 +0000</pubDate>
-    <lastBuildDate>Mon, 23 Mar 2015 17:20:35 +0000</lastBuildDate>
+    <pubDate>Wed, 25 Mar 2015 09:08:19 +0000</pubDate>
+    <lastBuildDate>Wed, 25 Mar 2015 09:08:19 +0000</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Packaging Principles - Coupling</title>
+        <description>&lt;h1 id=&quot;package-coupling&quot;&gt;Package Coupling&lt;/h1&gt;
+&lt;p&gt;When we create software components in the form of Java Jars, C# DLLs or Ruby gems, the two most important things that we want to get out of it are;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The ability to reuse components.&lt;/li&gt;
+  &lt;li&gt;The ability to change components.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Reusable components are crucial to any software development team that wants to remain efficient. I’ve worked on projects where we have been able to put together new software applications that are mostly composed on existing components. This saves a lot of work when done right.&lt;/p&gt;
+
+&lt;p&gt;There are three package coupling principles which I will go through in this blog post; The Acyclic Dependency Principle, the Stable Dependency Principle and the Stable Abstraction Principle.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-acyclic-dependency-principle&quot;&gt;The Acyclic Dependency Principle&lt;/h2&gt;
+&lt;p&gt;The Acycling Dependency Principle (ADP) says that if component A depends on component B, component B will not have any transitive dependencies on component A.
+I didn’t know that it was possible to violate this principle. With Java/Maven, you are (as far as I’m aware) not able to have any circular dependencies.&lt;/p&gt;
+
+&lt;p&gt;Say we had the following contrived dependency structure;&lt;/p&gt;
+
+&lt;p&gt;UserInterface -&amp;gt; Accounting -&amp;gt; StringUtils -&amp;gt; UserInterface&lt;/p&gt;
+
+&lt;p&gt;If we were testing the Account component which handles business logic/accounting rules, we’d need to depend on StringUtils.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, StringUtils is going to pull in the UserInterface dependencies too. So what is wrong with this?&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Compile times are going to increase, you now have to compile UserInterface (and all of its dependencies) whenever you compile Accounting.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When you deploy the Accounting module, you will need to have the UserInterface component build for it to reference too.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You are not able to yank out the Accounting component to reuse on a different application without Accounting carrying around its extra baggage.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;the-stable-dependency-principle&quot;&gt;The Stable Dependency Principle&lt;/h2&gt;
+&lt;p&gt;When we are talking about components, stability is how easy it is to change a component. It does not have anything to do with how buggy the component may be. One metaphor that Uncle Bob uses is a coin balancing on a table. This can be said to be unstable, you are easily able to change its state. The table on the other hand is sturdy, and is harder to change the state. Therefore, you can say the table is more stable than the coin.&lt;/p&gt;
+
+&lt;p&gt;Going back to software, any component that has lots of components depending on it will be stable.&lt;/p&gt;
+
+&lt;p&gt;If we had components X, Y and Z depending on A;&lt;/p&gt;
+
+&lt;p&gt;(X, Y, Z) -&amp;gt; A&lt;/p&gt;
+
+&lt;p&gt;A cannot change without cooperating with X, Y and Z, otherwise any change to A could break these components.&lt;/p&gt;
+
+&lt;p&gt;So how do we have reusable components that can react to change? The answer is to only depend on more stable components, and that is the crux of the Stable Dependency Principle.&lt;/p&gt;
+
+&lt;p&gt;Components which we expect to undergo many changes should have a minimum number of components depending on them. Components which we do not expect to change can have many components depending on them.&lt;/p&gt;
+
+&lt;p&gt;How we know which components should be more stable is what the next principle refers to.&lt;/p&gt;
+
+&lt;h2 id=&quot;the-stable-abstraction-principle&quot;&gt;The Stable Abstraction Principle&lt;/h2&gt;
+&lt;p&gt;Lets say we had a class A that implements some interface. It should be obvious to say that we would expect more changes to occur in class A compared to the interface. Afterall, the interface is where high level abstractions reside and these abstractions tend to change less than their concrete implementations.&lt;/p&gt;
+
+&lt;p&gt;With software components, the Stable Abstraction Principle states that a component should be as stable as it is abstract.&lt;/p&gt;
+
+&lt;p&gt;Abstract interfaces change less frequently than their concrete implementations, so we want the concrete implementations to depend on the abstractions.&lt;/p&gt;
+
+&lt;p&gt;The advantage of this is that components that are highly depended upon are more abstract and therefore undergo less frequent changes. Components that are more concrete have less dependencies and therefore can change with more ease.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 24 Mar 2015 00:00:00 +0000</pubDate>
+        <link>http://yourdomain.com/2015/03/24/package-coupling.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2015/03/24/package-coupling.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>Vim Projectionist</title>
@@ -391,64 +462,6 @@ My first Tic Tac Toe Game used a command line interface to display the board. I 
         <link>http://yourdomain.com/2015/02/12/tictactoe_presenter.html</link>
         <guid isPermaLink="true">http://yourdomain.com/2015/02/12/tictactoe_presenter.html</guid>
         
-        
-      </item>
-    
-      <item>
-        <title>Web Based Tic Tac Toe: Stateful vs Stateless</title>
-        <description>&lt;h1 id=&quot;the-requirement&quot;&gt;The Requirement&lt;/h1&gt;
-
-&lt;p&gt;Over the past couple of weeks, I was assigned the task of extending my Tic Tac Toe game such that it can be played in a web browser. This required a fairly significant refactor of my core game logic in order to facilitate this change. Moreover, I had to extract the game loop out of my Game object and instead have the browser (or Command Line or GUI) drive the game forward.&lt;/p&gt;
-
-&lt;p&gt;There was one particularly tricky aspect of this task, the solution had to be &lt;strong&gt;as simple as possible&lt;/strong&gt;. Usually when I’m building web apps, I’m using a framework like Django, front end JavaScript libraries such as JQuery/AngularJS, and a plethora of other tools to achieve what I want. Just by using Rack and not using JavaScript has been a fun and educational experience.&lt;/p&gt;
-
-&lt;p&gt;Note that my actual game of Tic Tac Toe supported the ability to choose a type of game (human vs computer, etc), and a board size. However for simplicity, I’ve not included that here and we are assuming we are working with a single game type and board size.&lt;/p&gt;
-
-&lt;h1 id=&quot;approach-one-stateful-backend&quot;&gt;Approach One: Stateful backend&lt;/h1&gt;
-
-&lt;p&gt;My first approach was to have all of the state at the backend. To set the scene, here is how my Tic Tac Toe works.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/tictactoe.png&quot; alt=&quot;Tic Tac Toe Diagram&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;To have a stateful backend, the Game was only created once at the start of the game. Once the game was created, this could then be stored in the session.&lt;/p&gt;
-
-&lt;p&gt;For subsequent moves, the following could then be carried out;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Retrieve game from the session&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Check if move is valid&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Register the new move with the game&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Store the game back in the session&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;When a user made a move, that was placed in a query parameter that my Controller could handle.&lt;/p&gt;
-
-&lt;p&gt;Now I’m aware that storing object references in the session is perhaps not the greatest idea. In Rails, you aren’t even able to store object references in sessions. Why did I do this? Because it’s the simplest thing I could come up with that’ll work.&lt;/p&gt;
-
-&lt;p&gt;The disadvantage with having the game stored in the session like this is that the user will not be able to play multiple games of TicTacToe at any one time. &lt;/p&gt;
-
-&lt;h1 id=&quot;approach-two-stateless-backend&quot;&gt;Approach Two: Stateless Backend&lt;/h1&gt;
-
-&lt;p&gt;The second approach was to adopt a more stateless backend, and having the state required for the gameplay transmitted via Query Parameters.&lt;/p&gt;
-
-&lt;p&gt;Along with the user’s move transmitted via a query parameter, the current board is also stored as a query parameter, and is passed in with every request. The Controller now has more work to do, rather than retrieve an existing game from the session, it must now construct the game for every request. The downside to this approach is now the Controller has to be aware of how to construct a Board which can be given to the Game.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 11 Feb 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/web/tictactoe/2015/02/11/tictactoe_approaches.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/web/tictactoe/2015/02/11/tictactoe_approaches.html</guid>
-        
-        
-        <category>web</category>
-        
-        <category>tictactoe</category>
         
       </item>
     
