@@ -6,9 +6,169 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 29 Mar 2015 16:17:51 +0100</pubDate>
-    <lastBuildDate>Sun, 29 Mar 2015 16:17:51 +0100</lastBuildDate>
+    <pubDate>Mon, 20 Apr 2015 17:11:09 +0100</pubDate>
+    <lastBuildDate>Mon, 20 Apr 2015 17:11:09 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Clojure - Stubbing Multimethod</title>
+        <description>&lt;h2 id=&quot;clojure---stubbing-multimethod&quot;&gt;Clojure - Stubbing Multimethod&lt;/h2&gt;
+&lt;p&gt;One way to achieve polymorpism in Clojure is to use &lt;a href=&quot;http://clojure.org/multimethods&quot;&gt;multimethods&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With my TicTacToe application in Clojure, I have two different types of players, Human and Computer.&lt;/p&gt;
+
+&lt;p&gt;To do the polymorphic dispatch, I have a dispatch method which picks out the &lt;code&gt;player_type&lt;/code&gt; value from the hash-map that is passed into it. For e.g, if I pass in &lt;code&gt;{:player_type :human}&lt;/code&gt;, it’ll look for the multimethod which has &lt;code&gt;:human&lt;/code&gt; label.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defmulti &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player-types&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+                         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;player-types&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:player_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In order to call the method, you’d do something like this;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;nv&quot;&gt;player/get-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:player_type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:human&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This will eventually delegate the method call to the following;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defmethod &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player/get-move&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:human&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-move-logic-goes-here&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;I think this is really nice.&lt;/p&gt;
+
+&lt;p&gt;Elsewhere, I have a &lt;code&gt;play-game&lt;/code&gt; function that runs through the entire game and keeps track of the current player.&lt;/p&gt;
+
+&lt;p&gt;However, I don’t want to use my human-player code, nor do I want to use my computer-player code. I want to use a stub player instead, so I can control what the next move will be placed.&lt;/p&gt;
+
+&lt;p&gt;In my unit test, I declare a new method that my multimethod can dispatch to;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prepare-stub-player-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;next-move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defmethod &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player/get-move&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:stub-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;In order to use a stub player, firstly I pass in a player to my &lt;code&gt;play-turn&lt;/code&gt; function with the player_type &lt;code&gt;stub-player&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the unit test, prior to calling &lt;code&gt;play-turn&lt;/code&gt;, I just call &lt;code&gt;(prepare-stub-player-move some-move)&lt;/code&gt; to get the stub player to always return &lt;code&gt;some-move&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There we have it, stubbed multimethods in Clojure.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 20 Apr 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/clojure/2015/04/20/stubbing-multimethod.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/clojure/2015/04/20/stubbing-multimethod.html</guid>
+        
+        
+        <category>clojure</category>
+        
+      </item>
+    
+      <item>
+        <title>Doing the simplest thing possible</title>
+        <description>&lt;h2 id=&quot;doing-the-simplest-thing-possible&quot;&gt;Doing the simplest thing possible&lt;/h2&gt;
+&lt;p&gt;Since starting at 8th Light, there has been a strong emphasis on doing things the simplest possible way. This notion applies to many different areas of software engineering.&lt;/p&gt;
+
+&lt;p&gt;When test driving a new piece of functionality, it is best to get into the habit of initially doing the simplest thing that can possible work. This can be challenging, as you will undoubtedly have an idea in your head how the code will look, and it is tempting to skip the trivial tests.&lt;/p&gt;
+
+&lt;p&gt;Recently, I have been learning Clojure and writing my first TicTacToe application with it. Clojure is radically different from any other programming language that I’ve used thus far. It’s been difficult to get used to. At one point, I was attempting to come up with a &lt;code&gt;Player&lt;/code&gt; abstraction that can be dependency injected into a &lt;code&gt;Game&lt;/code&gt; class. I had done the same in Ruby and C# with ease, and has allowed me to inject either Human/Computer/Stub players.&lt;/p&gt;
+
+&lt;p&gt;I really struggled getting this to work in a functional way, and struggled even more so trying to test this. After being stuck for some time, a colleague said to throw away the Player abstraction, hard code the player functionality into the game class, and refactor later. This was way easier to achieve, and despite violating SRP I had a working solution that can be cleaned up later on. “Make it work, then make it clean.”.&lt;/p&gt;
+
+&lt;p&gt;I did the rest of the TicTacToe with the approach whereby I would just do the simplest thing possible, and I quickly cobbled together a game that was playable. Now there were issues and plenty of things to improve upon, but having a basic working game is a great thing to start with.&lt;/p&gt;
+
+&lt;p&gt;Now that’s all well and good for something relatively basic like TicTacToe, but how does this approach work in the real world? In the past when I’ve joined software projects that are in their maturity and have a huge amount of complexity, I always wondered how such a system was ever designed and when all of this complexity was added.&lt;/p&gt;
+
+&lt;p&gt;At the start of a software project, XP says that you should pick the most important stories that will force you to come up with the basic architecture that you want to work with. It also says that you only write the functionality that’ll make the selected stories work, and nothing else. This sounded a bit paradoxical initially, surely you want to come up with an architecture whereby new functionality can be easily added, and therefore you’d like to create the abstractions early on that’ll would make future changes trivial to introduce.&lt;/p&gt;
+
+&lt;p&gt;It turns out that those preemptive abstractions are costly;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Coming up with the abstractions takes more effort.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Having them in your application adds complexity.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You are not certain what changes exactly you’d need in the future.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Having leaky abstractions can cause future code to be coerced into using it, and could result in less elegant solutions.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;If you keep code simple and clean, it will be easy to change. Trying to preempt change can at times be necessary if you think it will save time in the future, but usually it should be largely avoided.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 14 Apr 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/software/development/2015/04/14/simplest-thing-possible.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/software/development/2015/04/14/simplest-thing-possible.html</guid>
+        
+        
+        <category>software</category>
+        
+        <category>development</category>
+        
+      </item>
+    
+      <item>
+        <title>Clojure First Impressions</title>
+        <description>&lt;h2 id=&quot;clojure-first-impressions&quot;&gt;Clojure First Impressions&lt;/h2&gt;
+
+&lt;p&gt;I’ve been working on Clojure for the last couple of days, and thus far it has made a big impression on me.&lt;/p&gt;
+
+&lt;p&gt;I started off with the Clojure Koans, which I didn’t find particularly helpful. I found the nature of filling in the blanks a little too easy and not very educational.&lt;/p&gt;
+
+&lt;p&gt;After this, I did several of the the &lt;a href=&quot;https://www.4clojure.com/&quot;&gt;4Clojure&lt;/a&gt; problems, which I found far more helpful in learning a new language, as you need to think a little more about what you are doing.&lt;/p&gt;
+
+&lt;p&gt;With a few examples of 4Clojure done, I started on my TicTacToe and as I’ve done in the other OO programming languages, my first unit test was to create a Board object. I quickly realised how silly this was in a functional language, as there are no constructors in Clojure which I’m used to. In fact, although Clojure does give some options to work with state (i.e. atoms/refs), it seems the convention to not use instance variables that have their own state.&lt;/p&gt;
+
+&lt;p&gt;I’m not so sure about this approach, as I’m so used to working with objects that contain state. It seems like I’m working with a bunch of static classes/methods in an OO language.&lt;/p&gt;
+
+&lt;p&gt;However, because Clojure gives you so much flexibility when it comes to composing functions, it makes data feel like play-doh where I can mangle it anyway I please. This means that those ‘static’ methods can do a huge amount with a small amount of code.&lt;/p&gt;
+
+&lt;p&gt;I’m using Midje as a testing library, and I’m finding it an excellent way of learning the language. It runs tests on file changes and displays readable output with colour, but it also has a REPL which I feel really helps improve workflow.&lt;/p&gt;
+
+&lt;p&gt;With the OO languages I am used to working with, I strived towards having data behind some abstraction and only being able to access that data through methods on an object. That gives me the option to change the underlying data structure without affecting clients of that object.&lt;/p&gt;
+
+&lt;p&gt;With Clojure, the data (hash maps, vectors, lists) are piped across the application instead. I’m concerned that changes will ripple across the application.&lt;/p&gt;
+
+&lt;p&gt;I’m really looking forward to learning more about this language, and will post an update to see if my concerns that I’ve posted here were short-lived.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 09 Apr 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/clojure/2015/04/09/clojure-first-impressions.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/clojure/2015/04/09/clojure-first-impressions.html</guid>
+        
+        
+        <category>clojure</category>
+        
+      </item>
+    
+      <item>
+        <title>Acceptance Testing with a DSL</title>
+        <description>&lt;h2 id=&quot;acceptance-testing-with-a-dsl&quot;&gt;Acceptance Testing with a DSL&lt;/h2&gt;
+
+&lt;p&gt;Whilst reading &lt;a href=&quot;http://www.amazon.co.uk/The-Clean-Coder-Professional-Programmers/dp/0137081073&quot;&gt;Clean Coder&lt;/a&gt; by Uncle Bob, there is one chapter dedicated to acceptance testing.&lt;/p&gt;
+
+&lt;p&gt;In this chapter, he stresses on the importance of using a testing library such that acceptance scenarios can be written in plain English, and he recommends using a tool like Cucumber, Fitnesse, JBehave, etc.&lt;/p&gt;
+
+&lt;p&gt;However, I disagree this this additional level of abstraction is always strictly necessary when it comes to acceptance testing.&lt;/p&gt;
+
+&lt;p&gt;The argument for using acceptance tests written in plain English is that non technical employees can read and write them with a little amount of training.&lt;/p&gt;
+
+&lt;p&gt;One has to question just how often non-technical people are actually writing these scenarios without developer assistance, and is it really their remit to even do so.&lt;/p&gt;
+
+&lt;p&gt;Now there may be scenarios where plain English tests are preferable. For example, it could work for a team working on a mature application where there is a small amount of change to the core application, and instead most of the work is maintenance/additive. For these types of applications, most of the new features follow a particular pattern, and therefore plain English testing may be fairly easy to achieve.&lt;/p&gt;
+
+&lt;p&gt;However, for applications not in their maturity, or for more complex applications where new features differentiate from each other, then I feel a well written DSL would work better. &lt;/p&gt;
+
+&lt;p&gt;We should always strive to write beautiful code, whereby we compose functions/variables that clearly explain the intent of the software. We can (and should) make code readable to a non-technical person, and have high level policy separated from the low level details. A DSL can be readable to a non-technical person, yet have the advantage of flexibility and to be able to test complex scenarios easier than the plain English counterpart.&lt;/p&gt;
+
+&lt;p&gt;To summarise, I don’t see a huge amount of difference between a well written DSL and a plain English testing library in terms of readability. Given that the majority of the time these tests will be written by developers themselves, the DSL has the advantage of being more flexible with less work.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 08 Apr 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/acceptance/testing/2015/04/08/acceptance-testing.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/acceptance/testing/2015/04/08/acceptance-testing.html</guid>
+        
+        
+        <category>acceptance</category>
+        
+        <category>testing</category>
+        
+      </item>
     
       <item>
         <title>Developing C# with vim on OSX</title>
@@ -439,179 +599,6 @@ I didn’t know that it was possible to violate this principle. With Java/Maven,
         <category>segregation</category>
         
         <category>principle</category>
-        
-      </item>
-    
-      <item>
-        <title>To Mock Or To Stub</title>
-        <description>&lt;p&gt;When it comes to unit testing an object that has collaborators, it is necessary to use either a mock or a stub.&lt;/p&gt;
-
-&lt;p&gt;What’s the difference? A stub is an object that returns some data. It does not have any assertion logic built into it. A mock on the other hand contains assertion logic, and is usually automatically evaluated at the end of a unit test. We will also mention spys, which are objects that record method invocations but doesn’t contain any assertion logic.&lt;/p&gt;
-
-&lt;p&gt;The simple rule of thumb that I follow is this;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;When your object is requesting data from a collaborator, stub that response. You needn’t check that it was called in your unit test. Presumably, you are calling this object in order to change some state in the object you are testing. That change of state is what you should be testing.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;When your object is invoking a command against a collaborator, mock that object and assert that the method invocation was made with the correct arguments.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;In other words, use stubs for inbound messages to the object under test, and mocks for outbound.&lt;/p&gt;
-
-&lt;p&gt;What if we have a collaborator where we have both outbound and inbound messages going to and from the object under test. This sounds a little complex, and could indicate a code smell (maybe Tell, Don’t Ask was violated). Nonetheless, this situation can arise. There are three options you have;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Mock the behaviour in your unit test using a mocking library like JMock. The issue with this is you’ll tightly couple your test to the implementation of the complex collaborator. The slightest change to the collaborator will break this unit test. You’ll be in a world of pain if you’ve mocked this collaborator in multiple tests in this way.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Create a hand made stub/spy that mirrors your collaborator in your unit tests, make the assertions in your unit test to check that the object was called correctly. This hand made mock can be reused across multiple unit tests. If the collaborator were to change, only the hand made objec needs to change. &lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Use the real object in your test. I have used this approach with my TicTacToe, where I used a real &lt;code&gt;Game&lt;/code&gt; object when testing my &lt;code&gt;UserInterface&lt;/code&gt; class. The advantage with this is there’s no mock object tightly coupled to your collaborator. You can make assertions against the object under test, and the collaborator that it was interacted with correctly.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Ultimately, what we are striving for are unit tests that are not tightly coupled to the implemenation. On the other hand, coupling the tests to the interfaces of the collaborators is, in my opinion, okay. We have to test those interactions, yet because interfaces tend to change less frequently compared to the implementation details of those collaborators, our tests should be easier to change at a later date.&lt;/p&gt;
-</description>
-        <pubDate>Fri, 13 Mar 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/mock/stub/2015/03/13/mocking-vs-stubbing.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/mock/stub/2015/03/13/mocking-vs-stubbing.html</guid>
-        
-        
-        <category>mock</category>
-        
-        <category>stub</category>
-        
-      </item>
-    
-      <item>
-        <title>Software Development: Rushing will only slow you down</title>
-        <description>&lt;p&gt;The other day I was watching a painting competition on TV (I know, my coolness knows no bounds). I must stress that my artistic skills are horrific, and I know next to nothing about art or painting.  You may be wondering why I’m going on about painting on a blog that is a purveyor of (what I hope are) helpful software articles.&lt;/p&gt;
-
-&lt;p&gt;The contestants had to paint a picture of some sort in a given time, and were judged on their efforts afterwards. One thing that really struct me was that when they were approaching the end of their allocated time, the painters were not rushing even though some still had a lot of work to do.&lt;/p&gt;
-
-&lt;p&gt;As I’ve already mentioned, I’m no artist, yet rushing something typically equates to abandoning some level of care in order to complete a task. Had they have rushed, there would’ve been parts of the painting that look obviously worse than areas where more care was given.&lt;/p&gt;
-
-&lt;p&gt;Coming back to software development where are allocated time is usually a week, we can sometimes pack in more work than is anticipated. There are times where I have rushed, and I can categorically admit that every time has caused me pain. &lt;/p&gt;
-
-&lt;p&gt;When you are rushing to develop a software application, you are only concerned with one thing; get the tests passing and the features complete. Good code however takes time; time to refactor large functions into smaller functions, time to get the right abstractions in place, time to make the code coherent and easy to read. The time spent doing those things makes your code far easier to work with at a later date. &lt;/p&gt;
-
-&lt;p&gt;Code that is rushed is harder to maintain because maintainability wasn’t a concern to the developer whom was under pressure to deliver. Say you do rush and you managed to deliver something that worked but the code was not up to scratch, there is a very good chance you’ll be coming back to that rushed code in the very near future. That code is more likely to be harder to work with, and could potentially be thwart with design issues that’ll really affect your productivity for subsequent iterations.&lt;/p&gt;
-
-&lt;p&gt;Delivery managers will not agree with this, but when it comes to software development; take your time. Think about the best way to do something. What design would be best. Research ways to improve your productivity. Your code will be easier (and ultimately faster) to work with. You’ll gain that time back at a later date.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 11 Mar 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/rushing/2015/03/11/never-rush.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/rushing/2015/03/11/never-rush.html</guid>
-        
-        
-        <category>rushing</category>
-        
-      </item>
-    
-      <item>
-        <title>JavaScript: Module Pattern</title>
-        <description>&lt;p&gt;During the last week, I have been writing pure JavaScript for the first time. I used to rely on third-party libraries/frameworks like AngularJS and JQuery.&lt;/p&gt;
-
-&lt;p&gt;I was fairly happy with my initial attempt, and had used prototypes to define several objects.&lt;/p&gt;
-
-&lt;p&gt;However, having read the book &lt;strong&gt;JavaScript: The Good Parts&lt;/strong&gt; and studying the JavaScript language a little more, I am now seriously unhappy with my code having reviewed it.&lt;/p&gt;
-
-&lt;p&gt;The major problems I have with it is that some functions are declared in the global namespace which causes odd behaviour when you have methods with the same name. My codebase is fairly small, and I still experienced conflicts with my code.&lt;/p&gt;
-
-&lt;p&gt;The easiest way to avoid the global namespace is to use the module pattern. I won’t go into detail here on how it works, as there are far better resources out there that explain it very well indeed.&lt;/p&gt;
-
-&lt;p&gt;The crux of the module pattern is to use anonymous, immediately executed javascript functions that return the object that you want to create.&lt;/p&gt;
-
-&lt;p&gt;The following code is plagiarized from &lt;a href=&quot;http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MODULE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;privateVariable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;privateMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;moduleProperty&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;moduleMethod&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}());&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The advantage of this pattern is having objects with private methods and their own internal state.&lt;/p&gt;
-
-&lt;p&gt;CoffeeScript does something similar when it compiles down to JavaScript.&lt;/p&gt;
-
-&lt;p&gt;This is a pattern I can see myself using from now on, and does solve what is a nasty design flaw in JavaScript which is the global namespace&lt;/p&gt;
-</description>
-        <pubDate>Tue, 03 Mar 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/javascript/module/pattern/2015/03/03/javascript-modules.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/javascript/module/pattern/2015/03/03/javascript-modules.html</guid>
-        
-        
-        <category>javascript</category>
-        
-        <category>module</category>
-        
-        <category>pattern</category>
-        
-      </item>
-    
-      <item>
-        <title>Ruby and Rack: Working with session</title>
-        <description>&lt;p&gt;Rack is a very simple web server interface which you can use to build small web apps. One of the things that I really like about Rack is how minimalistic it is, which makes it a lot less intimidating than other web frameworks (e.g. rails)&lt;/p&gt;
-
-&lt;p&gt;This post will include a very small example on working with Rack’s session and how to unit test that the session has the correct values. &lt;/p&gt;
-
-&lt;p&gt;To write unit tests for rack, you need to include &lt;code&gt;Rack::Test::Methods&lt;/code&gt;. This provides several useful utility methods to test your rack application with.&lt;/p&gt;
-
-&lt;p&gt;Lets write a unit test that’ll test we can store an object in the session.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rack/test&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;describe&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Rspec Rack Unit Test&amp;quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Methods&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;app&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;RackSessionApp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;stores Hello World in saved_object&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;saved_object&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;last_request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;rack.session&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:saved_object&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saved_object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;In order to get access to the session, we can use &lt;code&gt;Rack::Request&lt;/code&gt; that provides helper methods.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;rack&amp;#39;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;RackSessionApp&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;session&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:saved_object&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Content-Type&amp;#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;text/html&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-</description>
-        <pubDate>Sun, 15 Feb 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/ruby/rack/2015/02/15/rack-sessions.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/ruby/rack/2015/02/15/rack-sessions.html</guid>
-        
-        
-        <category>ruby</category>
-        
-        <category>rack</category>
         
       </item>
     
