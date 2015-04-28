@@ -9,3 +9,4 @@ github_username:  c-j-j
 
 # Build settings
 markdown: kramdown
+paginate: 10
