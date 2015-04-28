@@ -6,9 +6,93 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 20 Apr 2015 17:11:09 +0100</pubDate>
-    <lastBuildDate>Mon, 20 Apr 2015 17:11:09 +0100</lastBuildDate>
+    <pubDate>Tue, 28 Apr 2015 10:41:47 +0100</pubDate>
+    <lastBuildDate>Tue, 28 Apr 2015 10:41:47 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Have a Break</title>
+        <description>&lt;h1 id=&quot;have-a-break&quot;&gt;Have a Break&lt;/h1&gt;
+&lt;p&gt;I’m going to start this blog with a very obvious statement. &lt;em&gt;Software can be really hard&lt;/em&gt;. If you care about writing good software, you’ll find it far more difficult than someone who doesn’t care. The reason why software is hard is because most of the time, we are staring into the abyss and doing something we probably haven’t done before.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;We are either working on a new project/feature where we are designing how the major components (or objects) will work together.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;We are using a third-party library that we haven’t used before.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;We are writing some algorithm we haven’t attempted before&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;We are making some change to an existing application that we are not familiar with&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Software can at times feel like a voyage of discovery, whereby you’d have some vague idea of what you want to achieve but no exact plan on how to get there.&lt;/p&gt;
+
+&lt;p&gt;As paradoxical as this may seem, the major part of software development isn’t actually writing code. It’s thinking about how to write code.&lt;/p&gt;
+
+&lt;p&gt;This is how it should be. If you are typing code very quickly without putting much thought into it, the chances are that your solutions will lack elegancy and be harder to work with later on. &lt;/p&gt;
+
+&lt;p&gt;Because so much time is spent on thinking, it’s really important to take regular breaks. It’s hard to work at full efficiency for long durations without getting tired/lost in the problem we are trying to solve.&lt;/p&gt;
+
+&lt;p&gt;This is particularly important if you are stuck on something. Many of us would have had those days whereby we are really stuck on a problem and are making no progress.&lt;/p&gt;
+
+&lt;p&gt;When this is the case and we are under pressure, we feel that taking a break will lose us time and add to the stress.&lt;/p&gt;
+
+&lt;p&gt;But in reality, when you are stuck for a long time, you get frustrated. You just want the thing to work now, you may have other tasks you wanted to get done today. &lt;/p&gt;
+
+&lt;p&gt;When I’m at the point where I’m stuck and starting to feel the frustration, I stop what I’m doing. I go and play foosball or take a walk. &lt;/p&gt;
+
+&lt;p&gt;When I come back a bit later, I feel I’m more able to tackle the problem at hand.&lt;/p&gt;
+
+&lt;p&gt;How many times have you spent an entire day on a problem, got nowhere, and then the next morning you got it working in no time at all with a tiny amount of code?&lt;/p&gt;
+
+&lt;p&gt;How many times have you had a eureka moment whilst in the shower?&lt;/p&gt;
+
+&lt;p&gt;Because we spend so much of our time thinking whilst coding, it’s important to keep our minds fresh.&lt;/p&gt;
+
+&lt;p&gt;Coding is not a mechical task, but an intellectual task, and is important that we are at our most effective whilst doing this.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 27 Apr 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/software/development/2015/04/27/have-a-break.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/software/development/2015/04/27/have-a-break.html</guid>
+        
+        
+        <category>software</category>
+        
+        <category>development</category>
+        
+      </item>
+    
+      <item>
+        <title>Clojure - Responding to Change</title>
+        <description>&lt;h2 id=&quot;clojure---responding-to-change&quot;&gt;Clojure - Responding to Change&lt;/h2&gt;
+
+&lt;p&gt;One of the things that initially concerned me when working with Clojure is how data is spread across the entire application. For instance, with my clojure TicTacToe application, I had a &lt;code&gt;Board&lt;/code&gt; data structure which was a vector as follows;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;[:X :X :X nil nil nil :O :O :O]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;To test other functions across the application that used the Board, they had to be aware that a board was indeed a vector. There is no board abstraction. I always wondered what would happen if I wanted to represent the board with another data structure, for e.g. a list? How would that change ripple across the application?&lt;/p&gt;
+
+&lt;p&gt;In an OO language, you would typically hide data behind some object abstraction and set it to private so that nothing else could access it. Therefore if you were to ever change the type of data stored, you can do so knowing that only the object that contains the data was referring to it. This means that change doesn’t permeate across the application.&lt;/p&gt;
+
+&lt;p&gt;In order to have a clojure application that responds to change well, the data has to be owned by some namespace, and non-trivial operations on that data should be made available in this namespace.&lt;/p&gt;
+
+&lt;p&gt;For example, if I had a &lt;code&gt;Board&lt;/code&gt; namespace, it’ll provide an empty vector (representing an empty board) for other functions/tests to work with, and all the functions required to work on that data. All other namespaces should use functions in the &lt;code&gt;Board&lt;/code&gt; namespace when working with this vector. You may choose to perform a function on the vector directly if the function is trivial and wouldn’t break if the vector were to change to some other data type (for instance, nil?).&lt;/p&gt;
+
+&lt;p&gt;Unlike traditional OO languages, Clojure doesn’t have objects to contain private data, but there’s also a very small number of possible data structures that you can use. You have a hash-map/vector/list or some value (which would be strings, numbers, keywords, etc). Therefore if you were to change the data type, your choice is fairly limited.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 21 Apr 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/clojure/2015/04/21/clojure-data-structures.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/clojure/2015/04/21/clojure-data-structures.html</guid>
+        
+        
+        <category>clojure</category>
+        
+      </item>
     
       <item>
         <title>Clojure - Stubbing Multimethod</title>
@@ -501,104 +585,6 @@ I didn’t know that it was possible to violate this principle. With Java/Maven,
         
         
         <category>software</category>
-        
-      </item>
-    
-      <item>
-        <title>A tip to improve your vim</title>
-        <description>&lt;p&gt;I was doing the coin change kata the other week, and one of the bits of feedback I received was that my Vim skills needed work.&lt;/p&gt;
-
-&lt;p&gt;I thought my vim skills were okay, but I was actually using the H,J,K,L keys far too much. I was traversing documents just using k (up) and j (down) keys.&lt;/p&gt;
-
-&lt;p&gt;Now, I have configured my Mac to repeat keys quickly when I hold the key down. However, vim provides many other ways to navigate around a document.&lt;/p&gt;
-
-&lt;p&gt;So how do you get out of the habit of using H,J,K, L? It’s easy, disable those keys (temporarily). Now you can’t use them, you are forced to find other habits.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;nnoremap h &lt;nop&gt;&amp;lt;/code&amp;gt;
-&lt;code&gt;nnoremap j &lt;nop&gt;&amp;lt;/code&amp;gt;
-&lt;code&gt;nnoremap k &lt;nop&gt;&amp;lt;/code&amp;gt;
-&lt;code&gt;nnoremap l &lt;nop&gt;&amp;lt;/code&amp;gt;&lt;/nop&gt;&lt;/code&gt;&lt;/nop&gt;&lt;/code&gt;&lt;/nop&gt;&lt;/code&gt;&lt;/nop&gt;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;And habit is the key word here. I disabled these during a Friday afternoon, and I quickly had to change habits that I have since kept.&lt;/p&gt;
-
-&lt;p&gt;These are crucial keys, it’s not practical to never use these keys. However they should only be used for one-off movements.&lt;/p&gt;
-
-&lt;p&gt;Instead of using these keys, use;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;f/F to move to a character on a line&lt;/li&gt;
-  &lt;li&gt;w/b to move back and forward a word&lt;/li&gt;
-  &lt;li&gt;G5 to move to the 5th line, or use :5&lt;cr&gt;&lt;/cr&gt;&lt;/li&gt;
-  &lt;li&gt;{,} to move one paragraph (which usually translates to a function)&lt;/li&gt;
-  &lt;li&gt;/,? to find text to navigate to&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Tue, 17 Mar 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/vim/2015/03/17/vim_improvement.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/vim/2015/03/17/vim_improvement.html</guid>
-        
-        
-        <category>vim</category>
-        
-      </item>
-    
-      <item>
-        <title>How I violated the Interface Segregation Principle</title>
-        <description>&lt;p&gt;Over the past few days I’ve been studying the SOLID principles, by watching the Clean Code videos as well as reading Principles, Patterns And Practices by Uncle Bob.&lt;/p&gt;
-
-&lt;p&gt;Although I’ve known about the SOLID principles for quite some time, I never realised quite how far and wide the principles reach when you are writing code.&lt;/p&gt;
-
-&lt;p&gt;For my first attempt at TicTacToe in Ruby, my code underwent many changes as new features were added. In hindsight, I did a poor job in keeping the abstractions correct as more features were added, and I ended up violating violating some of the SOLID principles in certain areas.&lt;/p&gt;
-
-&lt;p&gt;In this post, I’ll describe how I violated the Interface Segregation Principle (ISP).&lt;/p&gt;
-
-&lt;p&gt;ISP tells us that no classes should be forced to depend on methods it does not use.&lt;/p&gt;
-
-&lt;p&gt;When you override a method in an interface to only return a null response, or throw a &lt;code&gt;NotToBeUsedException&lt;/code&gt; of some sort, you could be violating ISP.&lt;/p&gt;
-
-&lt;p&gt;Initially, my TicTacToe used a CommandLineInterface, so I had an interface that looked like this;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserInterface&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getUserMove&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printOutcome&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;This worked fine for my CommandLineInterface, as when it was the human players turn, we requested that they enter their move.&lt;/p&gt;
-
-&lt;p&gt;The next feature came along to add a GUI client. I reused this interface, but did the following;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getUserMove&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MOVE_NOT_AVAILABLE&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;This is undoubtedly a hack. With a GUI client, moves are not requested by the user, but instead the user submits a move when they are ready. The user drives the game forward and we used an event driven architecture to achieve this by using another function.&lt;/p&gt;
-
-&lt;p&gt;The point is that CommandLineInterface and GUIInterface do not share the same behaviour all of the same behaviour. The GUI client is event driven with asynchronous behaviour, whereas the Command Line is a synchronous client which blocks the control flow when the user move is requested.&lt;/p&gt;
-
-&lt;p&gt;So, how would we fix this? One way could be that we need two interfaces;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;synchronousInterface&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getUserMove&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UserInterface&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;printOutcome&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Now we have segregated the interfaces, the GUI interface can implement methods only included in the &lt;code&gt;UserInterface&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;ISP goes further than only overriding the required methods in an interface. Whenever you have some code that is forced to do something it doesn’t need to do, you could be violating ISP. This could be having to pass in parameters to a method that the method doesn’t require, or passing an unused parameter in a constructor.&lt;/p&gt;
-
-&lt;p&gt;Hacks are easy things to do, especially when you’re in the zone and are just trying to get something working. The problem is they add up, and will add unnecessary confusion.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 16 Mar 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/interface/segregation/principle/2015/03/16/isp-violation.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/interface/segregation/principle/2015/03/16/isp-violation.html</guid>
-        
-        
-        <category>interface</category>
-        
-        <category>segregation</category>
-        
-        <category>principle</category>
         
       </item>
     

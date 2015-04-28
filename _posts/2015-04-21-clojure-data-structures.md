@@ -2,7 +2,7 @@
 layout: post
 title:  Clojure - Responding to Change
 date:   2015/04/21
-categories:clojure
+categories: clojure
 ---
 Clojure - Responding to Change
 -----------

@@ -1,11 +1,11 @@
 ---
 layout: post
 title:  Have a Break
-date:   2015/04/27
-categories:software development
+date: 2015/04/27
+categories: software development
 ---
 Have a Break
-====
+==================
 I'm going to start this blog with a very obvious statement. *Software can be really hard*. If you care about writing good software, you'll find it far more difficult than someone who doesn't care. The reason why software is hard is because most of the time, we are staring into the abyss and doing something we probably haven't done before.
 
 1. We are either working on a new project/feature where we are designing how the major components (or objects) will work together.
