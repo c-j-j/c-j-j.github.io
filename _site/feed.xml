@@ -6,9 +6,76 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 28 Apr 2015 10:58:50 +0100</pubDate>
-    <lastBuildDate>Tue, 28 Apr 2015 10:58:50 +0100</lastBuildDate>
+    <pubDate>Fri, 22 May 2015 16:08:47 +0100</pubDate>
+    <lastBuildDate>Fri, 22 May 2015 16:08:47 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>The Walking Skeleton</title>
+        <description>&lt;h1 id=&quot;the-walking-skeleton&quot;&gt;The Walking Skeleton&lt;/h1&gt;
+&lt;p&gt;Starting a brand new, green field proect is an exciting time that few software development professionals get to experience as much as they’d like. Most of the time, we are working on projects that are in progress or in their maintenance period.&lt;/p&gt;
+
+&lt;p&gt;Once you have captured all of the high level requirements, and have a reasonably good idea of what the project should end up like, now what? You’re ready to put the metaphorical pen to paper, or more accurately open up your favourite text editor to start writing some code.&lt;/p&gt;
+
+&lt;p&gt;Most software projects are composed of several major components, for example a web application would have the front-end code (HTML, CSS, JS), the back-end code (Rails/Sinatra), the database (SQL, NoSQL).&lt;/p&gt;
+</description>
+        <pubDate>Fri, 22 May 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/2015/05/22/project-startup.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2015/05/22/project-startup.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Machine Learning - K-Nearest Neighbours</title>
+        <description>&lt;h2 id=&quot;machine-learning---k-nearest-neighbours&quot;&gt;Machine Learning - K-Nearest Neighbours&lt;/h2&gt;
+
+&lt;h1 id=&quot;classification-vs-regression&quot;&gt;Classification vs Regression&lt;/h1&gt;
+&lt;p&gt;Before we begin, lets get some terminology out of the way.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Machine Learning: is essentially a piece of software that is able to receive some data and is able to make predictions using this data. The main types of algorithms used in machine learning are classification and regression.&lt;/li&gt;
+  &lt;li&gt;Classification algorithms - Could something be this or that? If you were to apply for a mortgage and you gave the bank a load of your criteria (age, occupation, etc), they will say YES or NO as to whether or not they’ll lend you the money. The result of a classification algorithm is one of a set of possible outcomes.&lt;/li&gt;
+  &lt;li&gt;Regression algorithms - What would be the value of this? If you had the heights/weights of 100 people, and plotted that data onto a graph, you could work out roughly guess how much a different person with a particular height would weigh. The result of a regression algorithm is typically a value that is calculated.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;k-nearest-neighbours&quot;&gt;K-Nearest Neighbours&lt;/h1&gt;
+&lt;p&gt;To describe what K-Nearest Neighbours is, let us use an an entirely plausable real world analogy. You are magically teleported to another part of the world, and are to continue your career as a software craftsmen there. However, during the teleportation process, you have somehow lost all of your previous programming knowledge. What a pity.&lt;/p&gt;
+
+&lt;p&gt;Furthermore, the teleportation process has eradicated your ability to know multiple programming languages. You must now select one programming language and you’ll need to find a job with this single skill.&lt;/p&gt;
+
+&lt;p&gt;Which programming langauge would you learn to maximise the chance of you finding a new job? What you may do is find out what language most of the companies in the local area are using, and learn that. How many of the nearest companies do you look at? 1? 2? K? You may see where I’m going with this. If 4 out of the 5 nearest companies in your area are all using Java, you may come to the realization that Java may be your best langauge to learn in order to find a new job. Like I said before, we are using an entirely plausable example here.&lt;/p&gt;
+
+&lt;p&gt;What I’ve described here is a Classification algorithm, whereby you are selecting which class (or in this case, programming langauge) to choose from.&lt;/p&gt;
+
+&lt;p&gt;K-Nearest Neighbours is split into two varieties, classification and regression.&lt;/p&gt;
+
+&lt;p&gt;K-Nearest Neighbours Classification works as follows;&lt;/p&gt;
+
+&lt;p&gt;Given the following graph;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://www.statsoft.com/portals/0/Support/KNNOverViewImageA.jpg&quot; alt=&quot;image&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Select a query point on the graph (red point on the graph)&lt;/li&gt;
+  &lt;li&gt;Select k number of data points that are closest to the query point.&lt;/li&gt;
+  &lt;li&gt;We can determine that the value of the query point will likely be the most common that the other data points hold.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;K-Nearest Neighbours Regression works in a similar way. Instead, rather than using the most common value in the neighbourhood, you would typically use the average of the values in the neighbourhood instead.&lt;/p&gt;
+
+&lt;p&gt;This algorithm can be applied in lots of dfferent areas. If you had a load of medical data for blood tests, you may expect a group of people with a particular disease to be clustered together if you were to plot that data in a graph.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 22 May 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/machine/learning/2015/05/22/k-nearest-neighbours.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/machine/learning/2015/05/22/k-nearest-neighbours.html</guid>
+        
+        
+        <category>machine</category>
+        
+        <category>learning</category>
+        
+      </item>
     
       <item>
         <title>Have a Break</title>
@@ -514,77 +581,6 @@ I didn’t know that it was possible to violate this principle. With Java/Maven,
         <link>http://yourdomain.com/2015/03/24/package-coupling.html</link>
         <guid isPermaLink="true">http://yourdomain.com/2015/03/24/package-coupling.html</guid>
         
-        
-      </item>
-    
-      <item>
-        <title>Vim Projectionist</title>
-        <description>&lt;p&gt;Vim: Projectionist&lt;/p&gt;
-
-&lt;p&gt;A really useful plugin that I have recently been working with is &lt;a href=&quot;https://github.com/tpope/vim-projectionist&quot;&gt;vim projectionist&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;What makes this particularly useful is the ability to quickly navigate to what it calls are “alternate” files.&lt;/p&gt;
-
-&lt;p&gt;For e.g., I can open up a file lib/my_class.rb - type :A and it will navigate to spec/my_class_spec.rb. Beforehand, I would make heavy use of NERDTree/Ctrl-P to open new files.&lt;/p&gt;
-
-&lt;p&gt;Instead of :A, you can type :AS (open up the alternate file in a horizontal split), :AV (vertical split), or :AT (new tab).&lt;/p&gt;
-
-&lt;p&gt;There’s other things you can do as well. If you use &lt;a href=&quot;https://github.com/tpope/vim-dispatch&quot;&gt;vim dispatch&lt;/a&gt;, you can set default dispatch tasks.&lt;/p&gt;
-
-&lt;p&gt;Here is .projections.json file I have configured for a ruby project;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;quot;make&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;rake&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;spec/*_spec.rb&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;dispatch&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;rspec {file}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;alternate&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;lib/{}.rb&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;lib/*.rb&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;alternate&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;spec/{}_spec.rb&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;If I’m on a file under &lt;code&gt;spec&lt;/code&gt; and I run &lt;code&gt;Dispatch&lt;/code&gt;, it’ll run rspec on the current file. If I’m on some production code under &lt;code&gt;lib&lt;/code&gt;, it’ll run the dispatch task on the alternate file, which in this case will run rspec on the spec.&lt;/p&gt;
-
-&lt;p&gt;You can also setup tasks that start when a file is opened, i.e. &lt;code&gt;rails server&lt;/code&gt; if you are working on a rails project.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 23 Mar 2015 00:00:00 +0000</pubDate>
-        <link>http://yourdomain.com/vim/2015/03/23/projectionist.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/vim/2015/03/23/projectionist.html</guid>
-        
-        
-        <category>vim</category>
-        
-      </item>
-    
-      <item>
-        <title>Wrap external libraries</title>
-        <description>&lt;p&gt;The other week, I was working on some JavaScript and needed to store some data on the client side, so I opted to use JQuery to save cookies rather than invent my own cookie storing mechanism.&lt;/p&gt;
-
-&lt;p&gt;It transpired that cookies weren’t right for this task. What I needed was for each tab a user opened to have its own storage cache. &lt;/p&gt;
-
-&lt;p&gt;I had to use SessionStorage instead, which does not persist data across different tabs.&lt;/p&gt;
-
-&lt;p&gt;I was expecting this to be a laborious task as I had used cookies extensively in my web app. Yet, it was an insanely fast task. How?&lt;/p&gt;
-
-&lt;p&gt;I had put the JQuery cookie methods in a separate &lt;code&gt;Storage&lt;/code&gt; class, which had the following methods;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;Storage&lt;/span&gt; 
-  &lt;span class=&quot;n&quot;&gt;storeItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;getItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;I only had to change two lines of production code to change the storage mechanism for the entire site.&lt;/p&gt;
-
-&lt;p&gt;I’ve done this far more lately. Wrapping any functions (third party or otherwise) that are called in several places in a class/helper function really helps when we have to change something.&lt;/p&gt;
-
-&lt;p&gt;Only having to change one method like this is very satisfying and saves a lot of time.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 19 Mar 2015 09:20:57 +0000</pubDate>
-        <link>http://yourdomain.com/software/2015/03/19/wrap-external-calls.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/software/2015/03/19/wrap-external-calls.html</guid>
-        
-        
-        <category>software</category>
         
       </item>
     
