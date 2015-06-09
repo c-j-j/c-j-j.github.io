@@ -51,4 +51,4 @@ The file system can be a problematic domain, especially with file permission iss
 
 Summary
 ----------
-Your application must have a well designed exception handling process baked into its core achitecture. When you suppress checked exceptions and start only having runtime exceptions flowing in your system, the more control you have on your application.
+Your application must have a well designed exception handling process baked into its core architecture. When you suppress checked exceptions and start only having runtime exceptions flowing in your system, the more control you have on your application.
