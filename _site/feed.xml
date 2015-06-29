@@ -6,9 +6,64 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 09 Jun 2015 16:24:26 +0100</pubDate>
-    <lastBuildDate>Tue, 09 Jun 2015 16:24:26 +0100</lastBuildDate>
+    <pubDate>Mon, 29 Jun 2015 15:09:30 +0100</pubDate>
+    <lastBuildDate>Mon, 29 Jun 2015 15:09:30 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Hand made mocks in Java</title>
+        <description>&lt;h2 id=&quot;hand-made-mocks-in-java&quot;&gt;Hand made mocks in Java&lt;/h2&gt;
+
+&lt;h1 id=&quot;why-not-use-jmockmockito&quot;&gt;Why not use JMock/Mockito?&lt;/h1&gt;
+&lt;p&gt;There was a time not too long ago where I would vehemently argue that you should use a mocking library when doing Test Driven Development in Java. I used to mock everything with JMock, and I felt really productive whilst using it. With these libraries, you can quickly define the behaviour of the collaborators of a particular class, without having to create any new objects. The purpose of the blog isn’t to completely deter you from using this libraries, they are very useful at times. Instead I want to present to you why you shouldn’t be too dependent on these libraries, and what alternatives there are.&lt;/p&gt;
+
+&lt;h1 id=&quot;duplication&quot;&gt;Duplication&lt;/h1&gt;
+&lt;p&gt;By using Mockito, lets stub out a simple string validator that’ll always return true. We can pass this to to an object under test.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;Validator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;validator&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Validator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;validator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;isValid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;anyString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Very straight forward. However, if this validator class was then used by several other classes, then this setup will be duplicated in every test suite. What is the problem with this?&lt;/p&gt;
+
+&lt;p&gt;Imagine a new requirement has presented itself such that it requires us to change our validator class to now return some &lt;code&gt;Result&lt;/code&gt; object instead of a boolean. This small change would cause compliation issues in many places, and suddenly you have to drill into multiple places in order to fix this. More change means more risk that something could break, and unnecessary change is something that we should aim to minimize. (With JMock you won’t even get compilation errors, instead your tests will simply fail due to the invalid types that your stubs return.)&lt;/p&gt;
+
+&lt;h1 id=&quot;unchecked-type-casts-in-tests&quot;&gt;Unchecked type casts in tests&lt;/h1&gt;
+&lt;p&gt;In the previous code, we were stubbing a &lt;code&gt;Validator&lt;/code&gt; class that makes use of generic types. Unfortunately, due to type erasure, we are not able to explicately state that we wish to mock a &lt;code&gt;Validator&lt;/code&gt; class with a concrete type of &lt;code&gt;String&lt;/code&gt;. We mocked a raw Validator class and assigned it to a Validator of type String. If you were to type the code above into an IDE like IntelliJ, it will give you a warning that there is an unchecked assignment; &lt;code&gt;Unchecked assignment: &#39;Validator&#39; to &#39;Validator&#39;`&amp;lt;java.lang.String`&amp;gt; &lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;To fix this, you would have to clutter up your test suite with suppression statements to make these warnings go away.&lt;/p&gt;
+
+&lt;h1 id=&quot;hand-made-stubs&quot;&gt;Hand made stubs&lt;/h1&gt;
+
+&lt;p&gt;Points to make&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Vocabulary
+Jmock/Mockito have
+    &lt;ul&gt;
+      &lt;li&gt;syntax&lt;/li&gt;
+      &lt;li&gt;difficult to reuse&lt;/li&gt;
+      &lt;li&gt;Loss of parameterized type&lt;/li&gt;
+      &lt;li&gt;Having to cast&lt;/li&gt;
+      &lt;li&gt;Unable to mock/stub generic types&lt;/li&gt;
+      &lt;li&gt;restrict change due to type checking&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Advantages of hand rolling
+  * No new syntax to learn, API to reference
+  * Reusable
+  * Able to define complex stubs easier
+  * Able to write stubs/spies with type&lt;/p&gt;
+</description>
+        <pubDate>Mon, 29 Jun 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/java/2015/06/29/2015-06-26-hand-rolling-java-mocks.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/java/2015/06/29/2015-06-26-hand-rolling-java-mocks.html</guid>
+        
+        
+        <category>java</category>
+        
+      </item>
     
       <item>
         <title>Checked Exceptions</title>
@@ -65,7 +120,7 @@
 &lt;p&gt;The file system can be a problematic domain, especially with file permission issues, disc space issues, and so on. However simulating these file issues in a unit test isn’t trivial. What’s worse, different OS’s work with files differently, and an operation that fails on a Windows machine may work on a Linux machine. Furthermore, libraries such as Apache commons seems to try and minimize exceptions by occurring by creating files that do not exist, and so on. To properly test things like IOExceptions, we have to do a fair amount of setup in order to get the exception to be thrown.&lt;/p&gt;
 
 &lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
-&lt;p&gt;Your application must have a well designed exception handling process baked into its core achitecture. When you suppress checked exceptions and start only having runtime exceptions flowing in your system, the more control you have on your application.&lt;/p&gt;
+&lt;p&gt;Your application must have a well designed exception handling process baked into its core architecture. When you suppress checked exceptions and start only having runtime exceptions flowing in your system, the more control you have on your application.&lt;/p&gt;
 </description>
         <pubDate>Tue, 09 Jun 2015 00:00:00 +0100</pubDate>
         <link>http://yourdomain.com/checked/exceptions/2015/06/09/checked-exceptions.html</link>
@@ -386,198 +441,6 @@
         <category>acceptance</category>
         
         <category>testing</category>
-        
-      </item>
-    
-      <item>
-        <title>Developing C# with vim on OSX</title>
-        <description>&lt;h2 id=&quot;developing-c-with-vim-on-osx&quot;&gt;Developing C# with vim on OSX&lt;/h2&gt;
-&lt;p&gt;This guide will explain how I have setup a C# development environment using vim on OSX.&lt;/p&gt;
-
-&lt;h1 id=&quot;environment-setup&quot;&gt;Environment Setup&lt;/h1&gt;
-&lt;p&gt;The following need to be installed onto your computer beforehand.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://www.mono-project.com/&quot;&gt;Mono&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Python 2.7&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;vim-setup&quot;&gt;Vim setup&lt;/h1&gt;
-
-&lt;p&gt;We’ll be heavily using &lt;a href=&quot;https://github.com/OmniSharp/omnisharp-vim#installation&quot;&gt;omnisharp-vim&lt;/a&gt; in this guide.. This plugin provides a huge amount of features that facilitates C# development. To make full use of the features that omnisharp has to offer, the following plugins are needed;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://github.com/kien/ctrlp.vim&quot;&gt;ctrlp&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://github.com/scrooloose/syntastic&quot;&gt;Syntastic&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://github.com/tpope/vim-dispatch&quot;&gt;vim-dispatch&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://github.com/ervandew/supertab&quot;&gt;supertab&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;configuring-omnisharp-to-run-tests-with-nunit&quot;&gt;Configuring omnisharp to run tests with nunit&lt;/h1&gt;
-&lt;p&gt;From the time of writing this, omnisharp is configured to expect &lt;code&gt;nunit-console.exe&lt;/code&gt; in your path somewhere. If this isn’t on your path, the nunit tests will silently fail to run. You have a choice with how to fix this;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Navigate to the omnisharp plugin configuration and change the test command from using &lt;code&gt;nunit-console.exe&lt;/code&gt; to &lt;code&gt;nunit-console4&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;In a directory that is on your path, create a symlink from nunit-console.exe to /Library/Frameworks/Mono.framework/Commands/nunit-console4&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Personally, I prefer the second option as it gives me the freedom to reinstall the plugin if necessary without having to dig into the configuration. Furthermore, the &lt;a href=&quot;https://github.com/OmniSharp/omnisharp-server/blob/0fc2fab6c44a19c6555248aa903c1e076afbd865/OmniSharp/config.json#L10&quot;&gt;location&lt;/a&gt; where the config.json is said to be stored is now out of date, and it is unclear which config.json in the plgunis directory structure you should use.&lt;/p&gt;
-
-&lt;h1 id=&quot;configuring-vim-with-omnisharp-shortcuts&quot;&gt;Configuring vim with omnisharp shortcuts&lt;/h1&gt;
-&lt;p&gt;You now have everything needed to open up a C# project in vim and be able to invoke omnisharp functions. However, you’ll need to make some amendments to your vim setup first to add some useful shortcuts. I would advise that you create a &lt;a href=&quot;http://vim.wikia.com/wiki/File_type_plugins&quot;&gt;file type plugin&lt;/a&gt; to dump this configuration into, so you can keep your .vimrc devoid of all of this c# configuration. Here’s what I’ve used, which I’ve yanked and slightly modified from &lt;a href=&quot;https://github.com/OmniSharp/omnisharp-vim#example-vimrc&quot;&gt;here&lt;/a&gt; to improve performance. &lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-vim&quot; data-lang=&quot;vim&quot;&gt;&lt;span class=&quot;c&quot;&gt;&amp;quot;OmniSharp won&amp;#39;t work without this setting&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;filetype&lt;/span&gt; plugin &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;tabstop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;shiftwidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;expandtab&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot;Showmatch significantly slows down omnicomplete&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;when the first match contains parentheses.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;noshowmatch&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot;Super tab settings&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;g&lt;/span&gt;:SuperTabDefaultCompletionType &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;context&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;g&lt;/span&gt;:SuperTabContextDefaultCompletionType &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;lt;c-x&amp;gt;&amp;lt;c-o&amp;gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;g&lt;/span&gt;:SuperTabDefaultCompletionTypeDiscovery &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; [&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;amp;omnifunc:&amp;lt;c-x&amp;gt;&amp;lt;c-o&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;amp;completefunc:&amp;lt;c-x&amp;gt;&amp;lt;c-n&amp;gt;&amp;quot;&lt;/span&gt;]
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;g&lt;/span&gt;:SuperTabClosePreviewOnPopupClose &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot;don&amp;#39;t autoselect first item in omnicomplete, show if only one item (for preview)&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;remove preview if you don&amp;#39;t want to see any documentation whatsoever.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;completeopt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;longest&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;menuone&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;preview
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot;Move the preview window (code documentation) to the bottom of the screen, so it doesn&amp;#39;t move the code!&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;You might also want to look at the echodoc plugin&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;splitbelow&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Get Code Issues and syntax errors&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;g&lt;/span&gt;:syntastic_cs_checkers &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; [&lt;span class=&quot;s1&quot;&gt;&amp;#39;syntax&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;semantic&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;issues&amp;#39;&lt;/span&gt;]
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot;Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;omnifunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;OmniSharp#Complete
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Synchronous build (blocks Vim)&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;F5&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; :&lt;span class=&quot;k&quot;&gt;wa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;!&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;:OmniSharpBuild&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Builds can also run asynchronously with vim-dispatch installed&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;b&lt;/span&gt; :&lt;span class=&quot;k&quot;&gt;wa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;!&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;:OmniSharpBuildAsync&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot; automatic syntax check on events (TextChanged requires Vim 7.4)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;autocmd&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;BufWritePost&lt;/span&gt; *.&lt;span class=&quot;k&quot;&gt;cs&lt;/span&gt; SyntasticCheck
-&lt;span class=&quot;k&quot;&gt;autocmd&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;BufWritePost&lt;/span&gt; *.&lt;span class=&quot;k&quot;&gt;cs&lt;/span&gt; SyntasticSetLoclist
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Automatically add new cs files to the nearest project on save&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;autocmd&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;BufWritePost&lt;/span&gt; *.&lt;span class=&quot;k&quot;&gt;cs&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;call&lt;/span&gt; OmniSharp#AddToProject&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot;The following commands are contextual, based on the current cursor position.&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;gd&lt;/span&gt; :OmniSharpGotoDefinition&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt; :OmniSharpFindImplementations&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ft&lt;/span&gt; :OmniSharpFindType&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fs&lt;/span&gt; :OmniSharpFindSymbol&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fu&lt;/span&gt; :OmniSharpFindUsages&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;finds members in the current buffer&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;fm :OmniSharpFindMembers&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;cursor can be anywhere on the line containing an issue&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;x&lt;/span&gt;  :OmniSharpFixIssue&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;fx :OmniSharpFixUsings&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;tt :OmniSharpTypeLookup&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;dc :OmniSharpDocumentation&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;rt :OmniSharpRunTests&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;rf :OmniSharpRunTestFixture&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;ra :OmniSharpRunAllTests&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;rl&lt;/span&gt; :OmniSharpRunLastTests&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;nop&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Remove &amp;#39;Press Enter to continue&amp;#39; message when type information is longer than one line.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cmdheight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Contextual code actions (requires CtrlP or unite.vim)&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;ca :OmniSharpGetCodeActions&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Run code actions with text selected in visual mode to extract method&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;vnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;ca :&lt;span class=&quot;k&quot;&gt;call&lt;/span&gt; OmniSharp#GetCodeActions&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;visual&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; rename with dialog&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;nnoremap &amp;lt;leader&amp;gt;nm :OmniSharpRename&amp;lt;cr&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;nnoremap &amp;lt;F2&amp;gt; :OmniSharpRename&amp;lt;cr&amp;gt;:wa&amp;lt;cr&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;F2&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt; :OmniSharpRename&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot; rename without dialog - with cursor on the symbol to rename... &amp;#39;:Rename newname&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;command! -nargs=1 Rename :call OmniSharp#RenameTo(&amp;quot;&amp;lt;args&amp;gt;&amp;quot;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Force OmniSharp to reload the solution. Useful when switching branches etc.&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;rl&lt;/span&gt; :OmniSharpReloadSolution&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cf&lt;/span&gt; :OmniSharpCodeFormat&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Load the current .cs file to the nearest project&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;tp&lt;/span&gt; :OmniSharpAddToProject&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; (Experimental - uses vim-dispatch or vimproc plugin) - Start the omnisharp server for the current solution&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ss&lt;/span&gt; :OmniSharpStartServer&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sp&lt;/span&gt; :OmniSharpStopServer&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;&amp;quot; Add syntax highlighting for types and interfaces&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;nnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;th&lt;/span&gt; :OmniSharpHighlightTypes&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;cr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;Don&amp;#39;t ask to save when changing buffers (i.e. when jumping to a type definition)&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;&amp;quot;extract text selected in visual mode as variable&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;vnoremap&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;leader&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;ev cvariable&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;esc&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;O&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;esc&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;pIvar variable &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;esc&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;A;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;esc&lt;span class=&quot;p&quot;&gt;&amp;gt;==&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;F2&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;hidden&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;setting-up-a-c-project&quot;&gt;Setting up a C# project&lt;/h1&gt;
-&lt;p&gt;To setup a C# project without relying on visual studio/xamarin studio, we can use &lt;a href=&quot;https://github.com/nosami/grunt-init-csharpsolution&quot;&gt;grunt-init-csharpsolution&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Creating a project is then as straight forward as navigating to an empty directory, and performing the following;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code&gt;grunt-init csharpsolution&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code&gt;nuget restore&lt;/code&gt; to install any dependencies&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;what-functionality-has-been-added&quot;&gt;What functionality has been added&lt;/h1&gt;
-&lt;p&gt;Now that we have this all setup, what does all of this give us? Provided you have followed all of these instructions, we now have&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Tab Autocomplete, which also shows which parameters a particular function expects.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Project wide refactor. Press F2 to change a class/function/variable name and it’ll rename all instances in your project.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Asynchronous test runner. In a nunit test, either press &lt;code&gt;,ra&lt;/code&gt; to run all tests, &lt;code&gt;,rf&lt;/code&gt; to run all tests in a particular fixture, or &lt;code&gt;,rt&lt;/code&gt; to run a single test. &lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Context aware code actions. If you have configured Syntastic to work, you can hover over code shaded red/blue (which is Syntastic that indicating something is wrong), &lt;code&gt;,ca&lt;/code&gt; will provide ways you can fix this.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Navigate to classes/functions using &lt;code&gt;gd&lt;/code&gt;.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
-&lt;p&gt;These features have allowed me to come up with a pretty decent workflow for writing C# using vim. I would strongly recommend that you read through the omnisharp documentation to find out everything this great plugin has to offer.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 25 Mar 2015 00:00:00 +0000</pubDate>
-        <link>http://yourdomain.com/vim/2015/03/25/vim-with-c-sharp.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/vim/2015/03/25/vim-with-c-sharp.html</guid>
-        
-        
-        <category>vim</category>
         
       </item>
     
