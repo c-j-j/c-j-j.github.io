@@ -6,13 +6,119 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 06 Jul 2015 20:57:30 +0100</pubDate>
-    <lastBuildDate>Mon, 06 Jul 2015 20:57:30 +0100</lastBuildDate>
+    <pubDate>Sun, 26 Jul 2015 20:05:10 +0100</pubDate>
+    <lastBuildDate>Sun, 26 Jul 2015 20:05:10 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
-        <title>Test Driven Development in Java - An alternative to mocking libraries</title>
-        <description>&lt;h2 id=&quot;test-driven-development-in-java---hand-made-mocks&quot;&gt;Test-Driven Development in Java - Hand made mocks&lt;/h2&gt;
+        <title>Loosely Coupled Testing</title>
+        <description>&lt;p&gt;Test Driven Development has a huge amount of benefits, but one that stands out to me is how it helps unify a team. After I have finished test driving some new code, I leave behind a suite of unit tests that the whole team can value from. This suite of tests asserts that the code I have written is (to the best of my abilities) correct. If someone else in the team wants to work on my code, they can use my suite of unit tests as a safety net that’ll catch any erroneous changes.&lt;/p&gt;
+
+&lt;p&gt;However, there is a risk that this safety net can become too tightly entangled around our code. Things like overusing mocking libraries and unit tests that possess too much knowldge of the system can in fact make the code more cumbersome to work with. Software is in a perpetual state of flux, and we need to be aware of the importance give it the room it needs to evolve.&lt;/p&gt;
+
+&lt;p&gt;Before we move on, I would suggest you read The Little Mocker, as I have used the vocabulary that is defined there to differentiate between test doubles/mocks/stubs/fakes/spies and so on.&lt;/p&gt;
+
+&lt;h1 id=&quot;mocking-collaborators&quot;&gt;Mocking Collaborators&lt;/h1&gt;
+
+&lt;p&gt;One of the fundamental axioms of object oriented programming is for objects to work together with other objects. If it wasn’t for this, we will be back to doing procedural programming. This has a profound effect on how we do our testing. When we are test driving a new class X that depends on class Y, then the test for class X also needs to be aware of this dependency.&lt;/p&gt;
+
+&lt;p&gt;Example Time. We are working on a &lt;code&gt;CinemaClient&lt;/code&gt; class that is going to be interacting with a &lt;code&gt;BoxOffice&lt;/code&gt; in order to check ticket availability/book tickets.&lt;/p&gt;
+
+&lt;p&gt;When writing the test for &lt;code&gt;CinemaClient&lt;/code&gt;, we need to provide it the &lt;code&gt;BoxOffice&lt;/code&gt; class as well. Unfortunately, the &lt;code&gt;BoxOffice&lt;/code&gt; has a load of its own dependencies, so we can’t easily use the real &lt;code&gt;BoxOffice&lt;/code&gt; class in the unit test for our &lt;code&gt;BoxOffice&lt;/code&gt;. Instead, we will be providing a test double that pretends to be the &lt;code&gt;BoxOffice&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;There’s a few ways we can do this, but the more common way that I have observed is to use a mocking library, e.g. JMock/Mockito for Java, rspec-mocks for Ruby. The reason why this approach is so common is because it is relatively quick and easy to do. For example, to stub the box office into returning zero availability, we can do something as follows;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;searches for availability from box office&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test_box_office&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:get_availability&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;and_return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;available_seats&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;cinema_client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_availability&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This test knows quite a lot of information with respect to the implementation of our &lt;code&gt;CinemaClient&lt;/code&gt;. It knows which methods get invoked when the cinema client is finding ticket availability, and is knowledgeable of the response that &lt;code&gt;box_office.get_availability&lt;/code&gt; is going to be returning.&lt;/p&gt;
+
+&lt;p&gt;It turns our that &lt;code&gt;get_availability&lt;/code&gt; method on the &lt;code&gt;BoxOffice&lt;/code&gt; is widely used across the system, and the mock setup we have used in the above test is now being copied all over the place. What happens when &lt;code&gt;get_availability&lt;/code&gt; undergoes some kind of change? What happens if the return value changes from a Hash to some other data type? It is true that a lot of the production code will need changing if this were to happen, but now the tests must also all be painstakingly updated to incorporate the change.&lt;/p&gt;
+
+&lt;p&gt;Another disadvantage to using mocking libraries is the amount of test setup that they can require. For e.g, let’s say testing a class that interacts with &lt;code&gt;BoxOffice&lt;/code&gt;, but we aren’t explicitly testing those interactions in all of the tests. We want create a stub that returns canned data as follows;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; 
+  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;box_office&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:get_availability&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;and_return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;availability&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;box_office&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:reserve_tickets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;box_office&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:book_tickets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; 
+
+&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:cinema_client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CinemaClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;box_office&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;finds availability&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cinema_client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;find_availability&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;reserves tickets&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;box_office&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:reserve_tickets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;quantity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Terminator Genesis&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cinema_client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reserve_tickets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;books tickets&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cinema_client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;book_tickets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:booked&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;There’s quite a lot of test setup here to ensure that all three tests pass. You may imagine this &lt;code&gt;before&lt;/code&gt; block getting unweildy as more and more changes are added.&lt;/p&gt;
+
+&lt;p&gt;So, what is the alternative?&lt;/p&gt;
+
+&lt;p&gt;We can hand roll a &lt;code&gt;FakeBoxOffice&lt;/code&gt; class that can be used across all classes.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakeBoxOffice&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_availability&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;available_seats&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;reserve_tickets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ticket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@reserved_tickets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ticket&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;book_tickets&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@booked_tickets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ticket&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;You may be thinking that this is way more code than was defined when using mocking libraries, so what has this given us?  All mock behaviour in one place to start with. If we we need to change the return value of &lt;code&gt;get_availability&lt;/code&gt;, we only need to do it here.&lt;/p&gt;
+
+&lt;p&gt;Some tests may want to &lt;code&gt;BoxOffice&lt;/code&gt; to have availability, some may not. We can create constructor methods that control this;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakeBoxOffice&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;has_availability&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@availability&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;movie&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Pixels&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;quantity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;new&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;no_availability&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@availability&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;new&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is how this now looks like in our unit test. Notice that we no longer have a load of mock setup that we don’t need.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:cinema_client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;CinemaClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;FakeBoxOffice&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;no_availability&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;data&quot;&gt;Data&lt;/h1&gt;
+&lt;p&gt;Talk about&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;test doubles being used, when we can use fixtures instead.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 29 Jun 2015 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/testing/2015/06/29/2015-07-26-loosely-coupled-testing.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/testing/2015/06/29/2015-07-26-loosely-coupled-testing.html</guid>
+        
+        
+        <category>testing</category>
+        
+      </item>
+    
+      <item>
+        <title>Test-Driven Development in Java - Handmade Mocks</title>
+        <description>&lt;h2 id=&quot;test-driven-development-in-java---handmade-mocks&quot;&gt;Test-Driven Development in Java - Handmade mocks&lt;/h2&gt;
 
 &lt;h1 id=&quot;mocking-in-unit-tests&quot;&gt;Mocking in unit tests&lt;/h1&gt;
 &lt;p&gt;Mock objects are great when we are testing with objects that lie on the “boundaries” of an application. We can mock interactions with the following to create fast and manageable unit tests.&lt;/p&gt;
@@ -22,12 +128,11 @@
   &lt;li&gt;File Systems&lt;/li&gt;
   &lt;li&gt;Web Sockets&lt;/li&gt;
   &lt;li&gt;Message Queues&lt;/li&gt;
-  &lt;li&gt;And so on…&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Mock objects are predominantly used to either create a stub that returns canned data, or to spy on the method invocations it has received from other objects.&lt;/p&gt;
 
-&lt;p&gt;In the past, I would use mocking libraries as the primary way of defining mock objects, and I felt really productive whilst using them. Mocking in this way is very quick and straight forward, and there are times when their usage is ideal. Therefore, the purpose of this article isn’t to completely dissuade you from using them. The problem that I have observed is when developers become too dependent on mocking libraries (like I was), and can cause unnecessary pain especially when it comes to change. Instead, there are cases where simply writing your own hand made mocks can result in unit tests that are far more decoupled from your collaborators.&lt;/p&gt;
+&lt;p&gt;In the past, I would use mocking libraries as the primary way of defining mock objects, and I felt really productive whilst using them. Mocking in this way is very quick and straight forward, and there are times when their usage is ideal. Therefore, the purpose of this article isn’t to completely dissuade you from using them. The problem that I have observed is when developers become too dependent on mocking libraries (like I was), and it can cause unnecessary pain especially when it comes to change. Instead, there are cases where simply writing your own handmade mocks can result in unit tests that are far more decoupled from your collaborators.&lt;/p&gt;
 
 &lt;p&gt;So, what is the problem with using mocking libraries?&lt;/p&gt;
 
@@ -45,7 +150,7 @@
 &lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;numberOfFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return 1 on subsequent calls&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;verify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteOldestFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;          &lt;span class=&quot;c1&quot;&gt;//check deleteOldestFile was called&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;The problem is that we have to assume how the &lt;code&gt;FileSystem&lt;/code&gt; works underneath. We either have to guess how the &lt;code&gt;FileSystem&lt;/code&gt; handles file deletions, or we have to peak into how &lt;code&gt;FileSystem&lt;/code&gt; works. Either way, that behaviour does not really belong in the unit test we are currently writing. This test has become highly coupled to the implementation of the &lt;code&gt;FileSystem&lt;/code&gt;. Any changes to the &lt;code&gt;FileSystem&lt;/code&gt; may result in changes to this class.&lt;/p&gt;
+&lt;p&gt;The problem that we have to make an assumption as to how the &lt;code&gt;FileSystem&lt;/code&gt; works underneath. We either have to guess how the &lt;code&gt;FileSystem&lt;/code&gt; handles file deletions, or we have to peak into how &lt;code&gt;FileSystem&lt;/code&gt; works. Either way, that behaviour does not really belong in the unit test we are currently writing. This test has become highly coupled to the implementation of the &lt;code&gt;FileSystem&lt;/code&gt;. Any changes to the &lt;code&gt;FileSystem&lt;/code&gt; may result in changes to this class.&lt;/p&gt;
 
 &lt;h1 id=&quot;duplication&quot;&gt;Duplication&lt;/h1&gt;
 &lt;p&gt;Another problem with mocking libraries is duplication of mock behaviour. If we were to read a file from the &lt;code&gt;FileSystem&lt;/code&gt;, we could stub out that interaction as follows;&lt;/p&gt;
@@ -55,10 +160,10 @@
 
 &lt;p&gt;Very straight forward. On the other hand you may imagine the &lt;code&gt;FileSystem&lt;/code&gt; being used in many places to read files, and therefore this mocked behaviour may be duplicated in lots of different unit tests.&lt;/p&gt;
 
-&lt;p&gt;Once again, the unit test is tightly coupled to the &lt;code&gt;FileSystem&lt;/code&gt;. If our &lt;code&gt;FileSystem&lt;/code&gt; class were to change, then you will have to drill into multiple unit tests to make the change. This leads to unnecessary developer effort that could be better spent elsewhere.&lt;/p&gt;
+&lt;p&gt;Once again, the unit test is tightly coupled to the &lt;code&gt;FileSystem&lt;/code&gt;. If our &lt;code&gt;FileSystem&lt;/code&gt; class were to change, then you would have to drill into multiple unit tests to make that change. This would lead to unnecessary developer effort that could be better spent elsewhere.&lt;/p&gt;
 
-&lt;h2 id=&quot;hand-made-mocks&quot;&gt;Hand made mocks&lt;/h2&gt;
-&lt;p&gt;The issues I have highlighted are really down to duplication/tight coupling between unit test and collaborator. To make our unit tests react to change more comfortably, we can create out own hand made mock objects instead. Mock objects are easily reusable and all of the mock behaviour is in one place.&lt;/p&gt;
+&lt;h2 id=&quot;handmade-mocks&quot;&gt;Handmade mocks&lt;/h2&gt;
+&lt;p&gt;The issues I have highlighted are really down to duplication/tight coupling between unit test and collaborator. To make our unit tests react to change more comfortably, we can create out own handmade mock objects instead. Mock objects are easily reusable and all of the mock behaviour is contained within one place.&lt;/p&gt;
 
 &lt;p&gt;Going back to our &lt;code&gt;FileSystem&lt;/code&gt;, we could create our own mock implementation which could pretend to read files as follows;&lt;/p&gt;
 
@@ -80,14 +185,14 @@
   &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;This &lt;code&gt;MockFileSystem&lt;/code&gt; can be reused across all unit tests needing access to the file system. If the behaviour of the file system were to change, for e.g. we now want to use the &lt;code&gt;java.io.File&lt;/code&gt; class to identify files instead of a &lt;code&gt;String&lt;/code&gt;, we have far fewer places to change compared to mock behaviour being defined across many unit tests.&lt;/p&gt;
+&lt;p&gt;This &lt;code&gt;MockFileSystem&lt;/code&gt; can be reused across all unit tests needing access to the file system. If the behaviour of the file system were to change, for example we now want to use the &lt;code&gt;java.io.File&lt;/code&gt; class to identify files instead of a &lt;code&gt;String&lt;/code&gt;, we have far fewer places to change compared to mock behaviour being defined across many unit tests.&lt;/p&gt;
 
 &lt;p&gt;All we are doing doing here is standard object oriented programming, and we can make the mock objects as expressive as we want.&lt;/p&gt;
 
-&lt;h1 id=&quot;hand-made-spies&quot;&gt;Hand made Spies&lt;/h1&gt;
+&lt;h1 id=&quot;handmade-spies&quot;&gt;Handmade Spies&lt;/h1&gt;
 &lt;p&gt;Another function that mocking libraries provide is the ability to check whether or not a method on a mock object was called correctly.&lt;/p&gt;
 
-&lt;p&gt;Going back to our file system, lets add a new method to delete a file. We will want to make sure that this method was called correctly;&lt;/p&gt;
+&lt;p&gt;Going back to our file system, lets add a new method to delete a file. We will want to make sure that this method was invoked correctly.&lt;/p&gt;
 
 &lt;p&gt;Let us extend on &lt;code&gt;FileSystem&lt;/code&gt;, this time recording what files were deleted. We will also delete the file from our MockFileSystem to ensure it is kept consistent with the real file system.&lt;/p&gt;
 
@@ -125,7 +230,7 @@
 &lt;p&gt;In our unit tests, we can now use the &lt;code&gt;getDeletedFiles()&lt;/code&gt; method to check that a particular file was in fact deleted.&lt;/p&gt;
 
 &lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
-&lt;p&gt;Mocking libraries can be useful for times when duplication isn’t going to be an issue and the mock behaviour is simple. However if you find that you are duplicating mock behaviour in many unit tests, or your mock objects are non-trivial, then hand made mock objects may be a better option. I’ve found them to be a better option for protecting your unit tests against change.&lt;/p&gt;
+&lt;p&gt;Mocking libraries can be useful for times when duplication isn’t going to be an issue and the mock behaviour is simple. However if you find that you are duplicating mock behaviour in many unit tests, or your mock objects are non-trivial, then handmade mock objects may be a better option. In my experience, I’ve found them to be a better option for protecting your unit tests against change.&lt;/p&gt;
 </description>
         <pubDate>Mon, 29 Jun 2015 00:00:00 +0100</pubDate>
         <link>http://yourdomain.com/java/2015/06/29/2015-06-26-hand-rolling-java-mocks.html</link>
@@ -295,7 +400,7 @@
 
 &lt;p&gt;As paradoxical as this may seem, the major part of software development isn’t actually writing code. It’s thinking about how to write code.&lt;/p&gt;
 
-&lt;p&gt;This is how it should be. If you are typing code very quickly without putting much thought into it, the chances are that your solutions will lack elegancy and be harder to work with later on. &lt;/p&gt;
+&lt;p&gt;This is how it should be. If you are typing code very quickly without putting much thought into it, the chances are that your solutions will lack elegancy and be harder to work with later on.&lt;/p&gt;
 
 &lt;p&gt;Because so much time is spent on thinking, it’s really important to take regular breaks. It’s hard to work at full efficiency for long durations without getting tired/lost in the problem we are trying to solve.&lt;/p&gt;
 
@@ -303,9 +408,9 @@
 
 &lt;p&gt;When this is the case and we are under pressure, we feel that taking a break will lose us time and add to the stress.&lt;/p&gt;
 
-&lt;p&gt;But in reality, when you are stuck for a long time, you get frustrated. You just want the thing to work now, you may have other tasks you wanted to get done today. &lt;/p&gt;
+&lt;p&gt;But in reality, when you are stuck for a long time, you get frustrated. You just want the thing to work now, you may have other tasks you wanted to get done today.&lt;/p&gt;
 
-&lt;p&gt;When I’m at the point where I’m stuck and starting to feel the frustration, I stop what I’m doing. I go and play foosball or take a walk. &lt;/p&gt;
+&lt;p&gt;When I’m at the point where I’m stuck and starting to feel the frustration, I stop what I’m doing. I go and play foosball or take a walk.&lt;/p&gt;
 
 &lt;p&gt;When I come back a bit later, I feel I’m more able to tackle the problem at hand.&lt;/p&gt;
 
@@ -479,39 +584,6 @@
         
         
         <category>clojure</category>
-        
-      </item>
-    
-      <item>
-        <title>Acceptance Testing with a DSL</title>
-        <description>&lt;h2 id=&quot;acceptance-testing-with-a-dsl&quot;&gt;Acceptance Testing with a DSL&lt;/h2&gt;
-
-&lt;p&gt;Whilst reading &lt;a href=&quot;http://www.amazon.co.uk/The-Clean-Coder-Professional-Programmers/dp/0137081073&quot;&gt;Clean Coder&lt;/a&gt; by Uncle Bob, there is one chapter dedicated to acceptance testing.&lt;/p&gt;
-
-&lt;p&gt;In this chapter, he stresses on the importance of using a testing library such that acceptance scenarios can be written in plain English, and he recommends using a tool like Cucumber, Fitnesse, JBehave, etc.&lt;/p&gt;
-
-&lt;p&gt;However, I disagree this this additional level of abstraction is always strictly necessary when it comes to acceptance testing.&lt;/p&gt;
-
-&lt;p&gt;The argument for using acceptance tests written in plain English is that non technical employees can read and write them with a little amount of training.&lt;/p&gt;
-
-&lt;p&gt;One has to question just how often non-technical people are actually writing these scenarios without developer assistance, and is it really their remit to even do so.&lt;/p&gt;
-
-&lt;p&gt;Now there may be scenarios where plain English tests are preferable. For example, it could work for a team working on a mature application where there is a small amount of change to the core application, and instead most of the work is maintenance/additive. For these types of applications, most of the new features follow a particular pattern, and therefore plain English testing may be fairly easy to achieve.&lt;/p&gt;
-
-&lt;p&gt;However, for applications not in their maturity, or for more complex applications where new features differentiate from each other, then I feel a well written DSL would work better. &lt;/p&gt;
-
-&lt;p&gt;We should always strive to write beautiful code, whereby we compose functions/variables that clearly explain the intent of the software. We can (and should) make code readable to a non-technical person, and have high level policy separated from the low level details. A DSL can be readable to a non-technical person, yet have the advantage of flexibility and to be able to test complex scenarios easier than the plain English counterpart.&lt;/p&gt;
-
-&lt;p&gt;To summarise, I don’t see a huge amount of difference between a well written DSL and a plain English testing library in terms of readability. Given that the majority of the time these tests will be written by developers themselves, the DSL has the advantage of being more flexible with less work.&lt;/p&gt;
-</description>
-        <pubDate>Wed, 08 Apr 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/acceptance/testing/2015/04/08/acceptance-testing.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/acceptance/testing/2015/04/08/acceptance-testing.html</guid>
-        
-        
-        <category>acceptance</category>
-        
-        <category>testing</category>
         
       </item>
     
