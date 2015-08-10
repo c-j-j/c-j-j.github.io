@@ -6,8 +6,8 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 10 Aug 2015 20:38:22 +0100</pubDate>
-    <lastBuildDate>Mon, 10 Aug 2015 20:38:22 +0100</lastBuildDate>
+    <pubDate>Mon, 10 Aug 2015 20:40:47 +0100</pubDate>
+    <lastBuildDate>Mon, 10 Aug 2015 20:40:47 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -135,8 +135,8 @@
 &lt;p&gt;In my experience, I’ve found the techniques described in this article help prevent changes in the production code from rippling too heavily into the test code.&lt;/p&gt;
 </description>
         <pubDate>Mon, 29 Jun 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/testing/2015/06/29/2015-07-26-loosely-coupled-testing.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/testing/2015/06/29/2015-07-26-loosely-coupled-testing.html</guid>
+        <link>http://yourdomain.com/testing/2015/06/29/loosely-coupled-testing.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/testing/2015/06/29/loosely-coupled-testing.html</guid>
         
         
         <category>testing</category>
