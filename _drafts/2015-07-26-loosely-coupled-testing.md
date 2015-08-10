@@ -1,110 +1,138 @@
 ---
 layout: post
-title:  Loosely Coupled Testing 
+title:  Loosely Coupled Testing
 date:   2015/06/29
 categories: testing
 ---
-Test Driven Development has a huge amount of benefits, but one that stands out to me is how it helps unify a team. After I have finished test driving some new code, I leave behind a suite of unit tests that the whole team can value from. This suite of tests asserts that the code I have written is (to the best of my abilities) correct. If someone else in the team wants to work on my code, they can use my suite of unit tests as a safety net that'll catch any erroneous changes.
+Test Driven Development (TDD) has a plethora of benefits, but the one that stands out for me is how it helps to unify a team. This is because the outcome of TDD is a code base with high code coverage which acts as a safety net for future changes.
 
-However, there is a risk that this safety net can become too tightly entangled around our code. Things like overusing mocking libraries and unit tests that possess too much knowldge of the system can in fact make the code more cumbersome to work with. Software is in a perpetual state of flux, and we need to be aware of the importance give it the room it needs to evolve.
+However, there is a risk that this safety net can become too tightly entangled around our code. For example, overusing mocking libraries or unit tests that are too knowledgeable about the code they are checking can in fact make the code more cumbersome to work with. Because software is in a perpetual state of flux, either due to new features being added or issues with the current code being addressed, our tests need to allow for change.
 
-Before we move on, I would suggest you read The Little Mocker, as I have used the vocabulary that is defined there to differentiate between test doubles/mocks/stubs/fakes/spies and so on.
+The vocabulary that I've used for the various test doubles (mocks/stubs, etc) is described in [The Little Mocker](https://blog.8thlight.com/uncle-bob/2014/05/14/TheLittleMocker.html), therefore I would encourage you to give that a read if you haven't already done so.
 
 Mocking Collaborators
 =========
+One of the fundamental axioms of object oriented programming is that a set of objects work together in order to achieve a particular goal. This has a profound effect on how we do our testing. When we are writing a test for a class `X` that depends on class `Y`, then the unit test for class `X` also needs to be aware of this dependency.
 
-One of the fundamental axioms of object oriented programming is for objects to work together with other objects. If it wasn't for this, we will be back to doing procedural programming. This has a profound effect on how we do our testing. When we are test driving a new class X that depends on class Y, then the test for class X also needs to be aware of this dependency.
+Let us imagine we are working on an `ATM` class that models a cash machine which you can use to extract money from, view bank balances, and so on. Our `ATM` class is going to be interacting with the `Bank`.
 
-Example Time. We are working on a `CinemaClient` class that is going to be interacting with a `BoxOffice` in order to check ticket availability/book tickets.
+Unfortunately the `Bank` communicates directly to various external systems, so we can't easily use the real `Bank` class in the unit test for our `ATM`. Instead, we will be utilizing polymorphism and dependency injecting test doubles of `Bank` into `ATM`.
 
-When writing the test for `CinemaClient`, we need to provide it the `BoxOffice` class as well. Unfortunately, the `BoxOffice` has a load of its own dependencies, so we can't easily use the real `BoxOffice` class in the unit test for our `BoxOffice`. Instead, we will be providing a test double that pretends to be the `BoxOffice`.
-
-There's a few ways we can do this, but the more common way that I have observed is to use a mocking library, e.g. JMock/Mockito for Java, rspec-mocks for Ruby. The reason why this approach is so common is because it is relatively quick and easy to do. For example, to stub the box office into returning zero availability, we can do something as follows;
+There's a few ways to create test doubles, but the more common way that I have observed is to use a mocking library, e.g. JMock/Mockito for Java, rspec-mocks for Ruby. The reason why this approach is so common is because it is relatively quick and easy to do. For example, to stub out the bank into returning bank account details for a particular bank account, we can do something as follows;
 
 {% highlight ruby %}
-it 'searches for availability from box office' do
-  expect(test_box_office).to receive(:get_availability).and_return({available_seats: []})
-  cinema_client.find_availability
+it 'shows balance' do
+  expect(test_bank).to receive(:get_account_details).and_return({balance: 0, previous_transactions = []})
+  atm.show_balance
 end
 {% endhighlight %}
 
-This test knows quite a lot of information with respect to the implementation of our `CinemaClient`. It knows which methods get invoked when the cinema client is finding ticket availability, and is knowledgeable of the response that `box_office.get_availability` is going to be returning.
+This test knows a fair amount of information. It knows which methods get invoked when the atm is finding out the bank balance, as well the format of the response that `bank.get_account_details` generates.
 
-It turns our that `get_availability` method on the `BoxOffice` is widely used across the system, and the mock setup we have used in the above test is now being copied all over the place. What happens when `get_availability` undergoes some kind of change? What happens if the return value changes from a Hash to some other data type? It is true that a lot of the production code will need changing if this were to happen, but now the tests must also all be painstakingly updated to incorporate the change.
+It turns out that `get_account_details` method on the `Bank` is widely used across the system, and the mock setup we have used in the above test is duplicated in many places. What happens when `get_account_details` undergoes some kind of change? What happens if the return value changes from a Hash to some other data type? It is true that a lot of the production code will need changing if this were to happen, but now each test must also be painstakingly updated to incorporate the change.
 
-Another disadvantage to using mocking libraries is the amount of test setup that they can require. For e.g, let's say testing a class that interacts with `BoxOffice`, but we aren't explicitly testing those interactions in all of the tests. We want create a stub that returns canned data as follows;
+Another disadvantage to using mocking libraries is the amount of test setup that they can require. It is not uncommon to see test code which heavily use mocking libraries to have a substantial amount of setup to ensure that all the methods on the test double have some default behaviour defined. For example, if we want to create our bank test double, we may have something as follows;
 
 {% highlight ruby %}
-before do 
-  allow(box_office).to receive(:get_availability).and_return(availability: [])
-  allow(box_office).to receive(:reserve_tickets)
-  allow(box_office).to receive(:book_tickets)
-end 
+let(:bank) { instance_double(Bank) }
+let(:atm)  { ATM.new(bank) }
 
-let(:cinema_client) { CinemaClient.new(box_office) }
-
-it 'finds availability' do
-  expect(cinema_client.find_availability).to eq([])
+before do
+  allow(bank).to receive(:get_account_details).and_return(balance: 20)
+  allow(bank).to receive(:credit)
+  allow(bank).to receive(:debit)
 end
 
-it 'reserves tickets' do
-  expect(box_office).to receive(:reserve_tickets).with({quantity: 3, movie: "Terminator Genesis"})
-  expect(cinema_client.reserve_tickets)
+it 'displays balance' do
+  expect(atm.show_balance).to eq(0)
 end
 
-it 'books tickets' do
-  expect(cinema_client.book_tickets).to eq({status: :booked})
+it 'pays in money' do
+  expect(bank).to receive(:credit).with({amount: 20, account_number: "123"})
+  expect(atm.pay_cheque(20, "123"))
+end
+
+it 'extract money' do
+  expect(bank).to receive(:debit).with({amount: 20, account_number: "55555 0123"})
+  atm.extract_money(20))
 end
 {% endhighlight %}
 
-There's quite a lot of test setup here to ensure that all three tests pass. You may imagine this `before` block getting unweildy as more and more changes are added.
+Without this default setup, we may run into errors where methods are invoked on `Bank` which have not yet been set up in the unit test. You may imagine this `before` block becoming unwieldy as bank is utilized more by `ATM`, as well as seeing this setup duplicated across other tests.
 
 So, what is the alternative?
 
-We can hand roll a `FakeBoxOffice` class that can be used across all classes.
+We can instead hand roll a `FakeBank` class that can be used across all classes.
 
 {% highlight ruby %}
-class FakeBoxOffice
-  def get_availability
-    {available_seats: []}
+class FakeBank
+  def get_account_details
+    {balance: 0, account_number: 123456}
   end
 
-  def reserve_tickets(ticket)
-    @reserved_tickets << ticket
+  def credit(transaction)
+    @credit_transactions << transaction
   end
 
-  def book_tickets
-    @booked_tickets << ticket
+  def debit(transaction)
+    @debit_transactions << transaction
   end
 end
 {% endhighlight %}
 
-You may be thinking that this is way more code than was defined when using mocking libraries, so what has this given us?  All mock behaviour in one place to start with. If we we need to change the return value of `get_availability`, we only need to do it here.
-
-Some tests may want to `BoxOffice` to have availability, some may not. We can create constructor methods that control this;
+What is the advantage of doing this? Well firstly, all mock behaviour in now defined in one place. If we we need to change the return value of `get_account_details`, we can do that change here instead of multiple test files. Secondly, as we have complete control over this test double, we can add functionality in order to make it easier to work with in our tests. For example, we can query the `FakeBank` for the previous transactions that have been made in order to check the ATM has debited money from a particular bank account for instance.
 
 {% highlight ruby %}
-class FakeBoxOffice
-  def self.has_availability
-    @availability = [{movie: "Pixels", quantity: 100}]
-    new
-  end
-
-  def self.no_availability
-    @availability = []
-    new
-  end
+it 'debits account' do
+  atm.extract_money(20)
+  expect(bank.debit_transactions).to include({amount: 20})
 end
 {% endhighlight %}
 
-This is how this now looks like in our unit test. Notice that we no longer have a load of mock setup that we don't need.
-
-{% highlight ruby %}
-  let(:cinema_client) {CinemaClient.new(FakeBoxOffice.no_availability)}
-{% endhighlight %}
-
-Data
+Loosely coupled data
 ==========
-Talk about
+When we are writing unit tests, we typically want to work with some kind of data. Data manifests itself in various forms, for example domain models/value objects/hash-maps and so on. Data can sometimes be non-trivial to initialize, for instance where there are many data fields required to initialize said data. To solve this problem, it is not uncommon to use test doubles that are far easier to instantiate, and then only defining pertinent fields that are required for the test to pass.
 
-* test doubles being used, when we can use fixtures instead.
+Lets say we were to create a `Transaction` data object that is to be utilized by our ATM. This can be achieved in ruby as follows;
+
+{% highlight ruby %}
+  transaction_double = double('from_account': 123, 'to_account': 345, amount: 500)
+{% endhighlight %}
+
+The problem that I have encountered with this approach is that whenever more fields from the data object are invoked by the code under test, we have to keep adding setup behaviour to `transaction_double`. The obvious alternative is to use real objects;
+
+{% highlight ruby %}
+  transaction = Transaction.new(id: 1, from_account: 123, to_account: 345, date: DateTime.now, amount: 500, many_more: "fields")
+{% endhighlight %}
+
+This is still not always ideal. Every time we want to create an `Transaction` in our tests now must have this substantial amount of initialization. Our test code is also highly dependent on the constructor not changing. Any new mandatory constructor arguments added to `Transaction` will break this test and any other tests creating `Transaction`s, despite whether or not those new fields being used by code under test.
+
+What I find the best option is to extract the object initialization into a separate spec helper;
+
+{% highlight ruby %}
+#some_bank_spec.rb
+order = create_transaction('from_account': 123, 'to_account': 345, amount: 500)
+
+#order_spec_helper.rb
+def create_transaction(attrs={})
+  Transaction.new({id: 1, from_account: 123, to_account: 345, date: DateTime.now, amount: 500, many_more: "default fields"}.merge(attrs))
+end
+{% endhighlight %}
+
+Some advantages that I see with this approach are as follows;
+
+1. All initialization is in one place. If a new mandatory data field is added, we only have one place to make a change.
+
+2. In our test code, we can create an `Transaction` whereby we only need to specify the pertinent fields (if any) that we care about in the unit test. The undefined data fields take on a default value.
+
+3. We are allowing our code under test to interact with our real data objects just as they would do in production. Test doubles can mask issues as the code is not being tested as thoroughly as it could be.
+
+In summary
+==============
+Tests need to possess some knowledge about the code they are asserting in order to thoroughly test for correct behaviour/allow for change. On the other hand, too much knowledge may result in tests becoming too tightly coupled to the code which can significantly stifle change.
+
+Mocking libraries can be useful for quickly building a fake collaborator when duplication isn't going to be an issue and the collaborator's behaviour is simple. However if you find that you are duplicating lots of setup in many unit tests, or your test doubles are non-trivial, then hand-rolling your test-doubles may be a better option.
+
+When it comes to data, my advice is to always use real data objects instead of doubles created by mocking libraries if you can. Real data objects in your tests tend to react to change better as there is no mock setup to maintain, and its easier to put initialization in one place.
+
+In my experience, I've found the techniques described in this article help prevent changes in the production code from rippling too heavily into the test code.
