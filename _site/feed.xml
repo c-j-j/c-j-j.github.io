@@ -6,9 +6,232 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 10 Aug 2015 20:40:47 +0100</pubDate>
-    <lastBuildDate>Mon, 10 Aug 2015 20:40:47 +0100</lastBuildDate>
+    <pubDate>Wed, 01 Jun 2016 20:10:58 +0100</pubDate>
+    <lastBuildDate>Wed, 01 Jun 2016 20:10:58 +0100</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Docker Workshop - Part One</title>
+        <description>&lt;h2 id=&quot;what-is-docker&quot;&gt;What is Docker&lt;/h2&gt;
+
+&lt;p&gt;A docker container is a minimal linux OS that only contains enough setup (i.e. environment variables, processes, files) to run our application. Because of this, they are very lightweight and can be run very quickly inside a virtual machine (VM) on your computer.&lt;/p&gt;
+
+&lt;p&gt;When we have our container all setup, we can deploy this same container on many different environments (staging/production server) with confidence that the container is guaranteed to work. It solves the problem where issues occur inconsistently across environments. No more “works on my machine”.&lt;/p&gt;
+
+&lt;h2 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;In the interest of time, it’ll be best for you to have docker installed prior to the workshop, and for you to pull a few Docker base images, just in case the Internet suddenly stops.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: &lt;a href=&quot;https://docs.docker.com/mac/step_one/&quot;&gt;install docker&lt;/a&gt;, and run &lt;code&gt;docker run hello-world&lt;/code&gt; to ensure that docker is installed correctly.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We’ll be building several docker images. When building a docker image, we will be using base images to make life a little easier for us.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Download the next base images&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker pull ubuntu&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker pull ruby:2.2.2&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker pull nginx&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Clone this &lt;a href=&quot;https://github.com/c-j-j/docker-workshop/&quot;&gt;github repo&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;step-zero-running-a-docker-image-from-the-docker-hub&quot;&gt;Step Zero: Running a docker image from the Docker Hub&lt;/h1&gt;
+&lt;p&gt;Let’s dive straight in to running a docker container from your laptop. The &lt;a href=&quot;https://hub.docker.com/explore/&quot;&gt;Docker Hub&lt;/a&gt; has lots of images that you can pull from the hub and run on your local machine.&lt;/p&gt;
+
+&lt;p&gt;For example, we can pull the ubuntu base image, and run &lt;code&gt;docker run ubuntu echo &quot;Hello World&quot;&lt;/code&gt;. If you had pulled the Ubuntu image earlier, then the image will already be on your machine and you should see “Hello World” appear. If you hadn’t done the step, it’ll just pull it from the hub prior to running.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker run&lt;/code&gt; starts a new container with the image you have specified, in this case we used the ubuntu image. An &lt;strong&gt;image&lt;/strong&gt; is like a blueprint, and a &lt;strong&gt;container&lt;/strong&gt; is the process that actually gets run based on the image.&lt;/p&gt;
+
+&lt;p&gt;To see what exactly is in this container, we can run bash inside the container and then start to explore what it actually consists of.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Run the following commands inside the ubuntu container; &lt;code&gt;pwd&lt;/code&gt;, &lt;code&gt;ls&lt;/code&gt;, &lt;code&gt;ps&lt;/code&gt;, &lt;code&gt;whoami&lt;/code&gt;. Run a bash session inside the container (you’ll need to pass –interactive –tty as arguments)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;step-one-building-a-docker-image&quot;&gt;Step One: Building a docker image&lt;/h1&gt;
+&lt;p&gt;In the github repo, navigate to step_one where you will find a simple ruby file named simple.rb. Step one involves running this small program inside a docker container.&lt;/p&gt;
+
+&lt;p&gt;In order to put our application in a docker container, we first need to build an image for the container. We can do this by creating a Dockerfile in the root of our project. The idea is that the Dockerfile will define an image which defines the environment to run the application in.&lt;/p&gt;
+
+&lt;p&gt;We have a choice on how to build the image. We &lt;em&gt;could&lt;/em&gt; build an image based on the Ubuntu official image, something like the following;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ubuntu&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;P&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xvf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;/configure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This will build a base image from Ubuntu, run &lt;code&gt;apt-get update&lt;/code&gt; and then install ruby 2.2.2, but that isn’t necessary as the Docker Hub already contains a ruby base image that we can use instead.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Create a Dockerfile and base the image from &lt;code&gt;ruby:2.2.2&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We can now build an image using this Dockerfile. In the same directory as the Dockerfile, run;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker build .&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;You should now be able to see your new image using;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker images&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Make a note of the image ID for the image you have just built.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Run a new container with the image ID that you just built, and run the command &lt;code&gt;ruby --version&lt;/code&gt; inside the docker container to ensure the container has the correct version of ruby installed.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to make working with docker easier, we can give our image a name by tagging it.&lt;/p&gt;
+
+&lt;p&gt;**Task: Build the image again, but tag it with the following name {your-name}/{image-name}. What is the version of the image? **&lt;/p&gt;
+
+&lt;p&gt;Do you now see your new image in the list of docker images you have?&lt;/p&gt;
+
+&lt;h1 id=&quot;running-our-ruby-program-in-the-container&quot;&gt;Running our ruby program in the container.&lt;/h1&gt;
+&lt;p&gt;We need to run the simple.rb inside our container. We first need to copy the ruby file into the container so it can be run.&lt;/p&gt;
+
+&lt;p&gt;We can copy files and directories from our local directory to the container by using the COPY command in the Dockerfile.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Copy over the simple.rb file to the container.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We &lt;em&gt;could&lt;/em&gt; run the program with &lt;code&gt;docker run chrisjordan/docker_demo ruby simple.rb&lt;/code&gt;. However we can define a default command that gets run inside the Dockerfile using CMD. For example we could do &lt;code&gt;CMD [&quot;ruby&quot;, &quot;--version&quot;]&lt;/code&gt; to print the ruby version by default.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Set &lt;code&gt;ruby simple.rb&lt;/code&gt; as the default command.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Rebuild the image. Now run the new container. You should now see the output of the ruby program. Good times!&lt;/p&gt;
+
+&lt;h1 id=&quot;step-two-running-a-web-app&quot;&gt;Step Two: Running a web app&lt;/h1&gt;
+&lt;p&gt;Go to step_two in the github repo. In here, we have a simple sinatra app that we’ll be running inside a container.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Set up the Dockerfile as follows&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Create a Dockerfile inside step_two&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Base the image from the ruby base image&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Set the working directory with &lt;code&gt;WORKDIR /var/app&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Expose the port we want to access with &lt;code&gt;EXPOSE 4567&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Copy over the lib directory and the Gemfile&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Add &lt;code&gt;RUN bundle install&lt;/code&gt; to install the ruby dependencies.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Add &lt;code&gt;CMD [&quot;ruby&quot;, &quot;lib/app.rb&quot;]&lt;/code&gt; to run the application.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;Build the image and run the container.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You should see the application has started. It should say that the app was started on port 4567, but you will not be able to access the app from your machine just yet.&lt;/p&gt;
+
+&lt;p&gt;This is because the port on your local machine needs to forward requests to the container. Stop the container, and run it again as follows;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;docker run -p &quot;4567:4567&quot; chrisjordan/docker_demo&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This forwards port 4567 from your machine to 4567 on the container. Now you should be able to view the app in your browser. but how you access that depends on whether you’re using Docker for Mac or Docker Machine;&lt;/p&gt;
+
+&lt;h1 id=&quot;docker-for-maclinux-vs-docker-machinevirtualbox&quot;&gt;Docker for Mac/Linux vs Docker Machine/VirtualBox&lt;/h1&gt;
+&lt;p&gt;Depending on how you installed Docker changes how you can access the container. If you have Docker for Mac, you can go to your internet browser and access the app with “localhost:4567”.&lt;/p&gt;
+
+&lt;p&gt;If you are running Docker in a VM using VirtualBox and used &lt;code&gt;docker-machine&lt;/code&gt; to start the docker VM, then you will need to find the IP address of the docker VM. You should be able to get this IP with &lt;code&gt;docker-machine ip default&lt;/code&gt; (or whatever name you chose for your local docker machine). You can then view the app using “192.168.99.104:4567” or whatever the IP address of your docker VM is running on.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: At the moment, every time you change something in the lib directory, the dependencies are going to be fetched during &lt;code&gt;bundle install&lt;/code&gt;. Copy the Gemfile and do the bundle install before you copy over the lib directory, and then rebuild the image. You should notice that you can make changes to the lib directory, and not have to fetch the dependencies again.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;accessing-a-running-container&quot;&gt;Accessing a running container&lt;/h1&gt;
+&lt;p&gt;We can run the docker image in daemon mode, as follows &lt;code&gt;docker run -d -p &quot;4567:4567&quot; chrisjordan/docker_demo&lt;/code&gt;. You can see a list of all running containers by using &lt;code&gt;docker ps&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Find the container ID of the running container, and access it with &lt;code&gt;docker exec --interactive --tty CONTAINER_ID bash&lt;/code&gt;&lt;/strong&gt;. You can find the running ruby process with &lt;code&gt;ps -elf&lt;/code&gt;, or curl the sinatra app by using &lt;code&gt;curl localhost:4567&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;looking-at-logs&quot;&gt;Looking at logs&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Task: View the logs of the running docker container by doing &lt;code&gt;docker logs CONTAINER_ID&lt;/code&gt;. You can pass &lt;code&gt;--follow&lt;/code&gt; to tail the log.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;killing-a-running-container&quot;&gt;Killing a running container&lt;/h1&gt;
+&lt;p&gt;To kill the container, execute &lt;code&gt;docker kill CONTAINER_ID&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;You should no longer see the running container by running &lt;code&gt;docker ps&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;mounting-a-volume&quot;&gt;Mounting a volume&lt;/h1&gt;
+&lt;p&gt;Run the sinatra container again. Try making a change to the text in lib/app.rb on your host machine to return a different message. You will not see your updated message. Which is really rather unfortunate. Please don’t cry, we can fix that!&lt;/p&gt;
+
+&lt;p&gt;Right now the file system inside the container is isolated from your local environment. We can mount a volume, which means creating a link between the files on your machine with files on the container.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Run the docker container with a mounting volume by adding &lt;code&gt;-v `pwd`:/var/app&lt;/code&gt; when you run the new container. This will mount the step_two directory on your host machine to /var/app on the container.&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now that the docker container is running, you should now see changes being picked up. Yay!&lt;/p&gt;
+
+&lt;h1 id=&quot;running-tests-in-the-containers&quot;&gt;Running tests in the containers&lt;/h1&gt;
+&lt;p&gt;You can run tests inside your container, which is useful for CI or when another developer would like to run the unit tests without having to configure their own environment to do so.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Copy over the spec directory to the container, and run the container with the command &lt;code&gt;rspec&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;pushing-your-image-to-the-docker-hub&quot;&gt;Pushing your image to the Docker Hub&lt;/h1&gt;
+&lt;p&gt;Now we have our image that’s built, we can push it to the &lt;a href=&quot;https://hub.docker.com/&quot;&gt;Docker Hub&lt;/a&gt; for the entire world to check out. For this task, you will need to have an account registered with Docker.&lt;/p&gt;
+
+&lt;p&gt;We need to tag the image we have built with our docker username. Find the most recently built image with &lt;code&gt;docker images&lt;/code&gt;, and make a note of the image ID.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Tag the image with your username - &lt;code&gt;docker tag IMAGE_ID chrisjordan/docker_demo:1.0&lt;/code&gt;, making sure you replace &lt;code&gt;chrisjordan&lt;/code&gt; with your docker username. You’re free to select what name you’d like to tag, I’ve chosen “docker_demo”, and the version I’ve used “1.0” here.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE: Ensure you give the image a version ID when you’re pushing your image to the hub. If you don’t specify a version, it’ll use &lt;code&gt;latest&lt;/code&gt; which can result in ambiguity between docker images.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Log in to docker with &lt;code&gt;docker login --username=your-user-name&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now you’re ready to push your image to the docker hub. &lt;code&gt;docker push chrisjordan/docker_demo:1.0&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;This is going to take a while. If my calculations are correct, you’ll be uploading around 200MB to the docker hub. Feel free to have a cup of tea at this time.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;working-with-many-containers&quot;&gt;Working with many containers&lt;/h1&gt;
+&lt;p&gt;We are now ready to move to step_three. For this step, our sinatra app will be storing the number of website hits it has. We’ll be using a redis database to store this information.&lt;/p&gt;
+
+&lt;p&gt;According to the &lt;a href=&quot;http://12factor.net/&quot;&gt;Twelve Factor App Manifesto&lt;/a&gt;, a database should be external to the application container. We can use Docker Compose to spin up multiple containers and to link them together so they can communicate to one another.&lt;/p&gt;
+
+&lt;p&gt;The step_three directory has a Dockerfile in there already which is the same as step_two. Go ahead and build the image in the same way you’ve done before. Make sure you tag the image with the format “username/image_name:version_number”. You’ll need to put this in the docker compose file.&lt;/p&gt;
+
+&lt;p&gt;To use docker compose, we first need to create a “docker-compose.yml” file in the root of step/_three that docker compose will be using.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Create a docker-compose.yml file in step_there with the following contents, replacing the image from “chrisjordan/docker_demo:1” with your docker image;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;ss&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;ss&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrisjordan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;docker_demo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;4567:4567&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Add a service with the name “db” and the image set to “redis”.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Spin up the containers with &lt;code&gt;docker-compose up&lt;/code&gt;. This will automatically pick up your docker-compose.yml file as this is the default filename that it looks for.&lt;/p&gt;
+
+&lt;p&gt;Try to access the app at localhost:4567 (or &lt;code&gt;docker-machine ip default&lt;/code&gt;:4567 for those not using Docker for Mac). You’ll get an error because the sinatra app can’t find the redis container.&lt;/p&gt;
+
+&lt;p&gt;When we link together containers, docker-compose allows one container to talk to another through the name of the service defined in the docker compose file. This means the web container can access the db container with the host &lt;code&gt;db:6379&lt;/code&gt; (as 6479 is the default redis port).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Task: Go ahead and correct the host name in lib/app.rb to “db”.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Kill the current docker compose process. Rebuild the image, and run docker compose again. You should now see the counter increment after every refresh.&lt;/p&gt;
+
+&lt;h1 id=&quot;the-end&quot;&gt;The End&lt;/h1&gt;
+&lt;p&gt;I hope you’ve enjoyed this workshop, and are now familiar with docker containers/images. In the next workshop, we’ll be deploying our docker container (somewhere, TBC).&lt;/p&gt;
+</description>
+        <pubDate>Thu, 19 May 2016 00:00:00 +0100</pubDate>
+        <link>http://yourdomain.com/docker/workshop/2016/05/19/docker-workshop-one.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/docker/workshop/2016/05/19/docker-workshop-one.html</guid>
+        
+        
+        <category>docker</category>
+        
+        <category>workshop</category>
+        
+      </item>
     
       <item>
         <title>Loosely Coupled Testing</title>
@@ -140,131 +363,6 @@
         
         
         <category>testing</category>
-        
-      </item>
-    
-      <item>
-        <title>Test-Driven Development in Java - Handmade Mocks</title>
-        <description>&lt;h2 id=&quot;test-driven-development-in-java---handmade-mocks&quot;&gt;Test-Driven Development in Java - Handmade mocks&lt;/h2&gt;
-
-&lt;h1 id=&quot;mocking-in-unit-tests&quot;&gt;Mocking in unit tests&lt;/h1&gt;
-&lt;p&gt;Mock objects are great when we are testing with objects that lie on the “boundaries” of an application. We can mock interactions with the following to create fast and manageable unit tests.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Databases&lt;/li&gt;
-  &lt;li&gt;File Systems&lt;/li&gt;
-  &lt;li&gt;Web Sockets&lt;/li&gt;
-  &lt;li&gt;Message Queues&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Mock objects are predominantly used to either create a stub that returns canned data, or to spy on the method invocations it has received from other objects.&lt;/p&gt;
-
-&lt;p&gt;In the past, I would use mocking libraries as the primary way of defining mock objects, and I felt really productive whilst using them. Mocking in this way is very quick and straight forward, and there are times when their usage is ideal. Therefore, the purpose of this article isn’t to completely dissuade you from using them. The problem that I have observed is when developers become too dependent on mocking libraries (like I was), and it can cause unnecessary pain especially when it comes to change. Instead, there are cases where simply writing your own handmade mocks can result in unit tests that are far more decoupled from your collaborators.&lt;/p&gt;
-
-&lt;p&gt;So, what is the problem with using mocking libraries?&lt;/p&gt;
-
-&lt;h1 id=&quot;misplaced-behaviour&quot;&gt;Misplaced Behaviour&lt;/h1&gt;
-&lt;p&gt;Lets pretend we are testing some class that is interacting with the file system. Our class is going to delete all files except for the newest file. We have decided to use iteration to undertake this task, which will look something like the following;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;numberOfFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteOldestFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;As we are dealing with the file system, we want to mock this interaction. How would we mock this using a library like Mockito?&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;FileSystem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;numberOfFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return 2 during the first call&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;numberOfFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//return 1 on subsequent calls&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;verify&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;deleteOldestFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;          &lt;span class=&quot;c1&quot;&gt;//check deleteOldestFile was called&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;The problem that we have to make an assumption as to how the &lt;code&gt;FileSystem&lt;/code&gt; works underneath. We either have to guess how the &lt;code&gt;FileSystem&lt;/code&gt; handles file deletions, or we have to peak into how &lt;code&gt;FileSystem&lt;/code&gt; works. Either way, that behaviour does not really belong in the unit test we are currently writing. This test has become highly coupled to the implementation of the &lt;code&gt;FileSystem&lt;/code&gt;. Any changes to the &lt;code&gt;FileSystem&lt;/code&gt; may result in changes to this class.&lt;/p&gt;
-
-&lt;h1 id=&quot;duplication&quot;&gt;Duplication&lt;/h1&gt;
-&lt;p&gt;Another problem with mocking libraries is duplication of mock behaviour. If we were to read a file from the &lt;code&gt;FileSystem&lt;/code&gt;, we could stub out that interaction as follows;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;n&quot;&gt;FileSystem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mock&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;readFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;testFile.txt&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenReturn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;TestFileContent&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;Very straight forward. On the other hand you may imagine the &lt;code&gt;FileSystem&lt;/code&gt; being used in many places to read files, and therefore this mocked behaviour may be duplicated in lots of different unit tests.&lt;/p&gt;
-
-&lt;p&gt;Once again, the unit test is tightly coupled to the &lt;code&gt;FileSystem&lt;/code&gt;. If our &lt;code&gt;FileSystem&lt;/code&gt; class were to change, then you would have to drill into multiple unit tests to make that change. This would lead to unnecessary developer effort that could be better spent elsewhere.&lt;/p&gt;
-
-&lt;h2 id=&quot;handmade-mocks&quot;&gt;Handmade mocks&lt;/h2&gt;
-&lt;p&gt;The issues I have highlighted are really down to duplication/tight coupling between unit test and collaborator. To make our unit tests react to change more comfortably, we can create out own handmade mock objects instead. Mock objects are easily reusable and all of the mock behaviour is contained within one place.&lt;/p&gt;
-
-&lt;p&gt;Going back to our &lt;code&gt;FileSystem&lt;/code&gt;, we could create our own mock implementation which could pretend to read files as follows;&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MockFileSystem&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileSystem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MockFileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MockFileSystem&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createWithFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MockFileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;readFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;This &lt;code&gt;MockFileSystem&lt;/code&gt; can be reused across all unit tests needing access to the file system. If the behaviour of the file system were to change, for example we now want to use the &lt;code&gt;java.io.File&lt;/code&gt; class to identify files instead of a &lt;code&gt;String&lt;/code&gt;, we have far fewer places to change compared to mock behaviour being defined across many unit tests.&lt;/p&gt;
-
-&lt;p&gt;All we are doing doing here is standard object oriented programming, and we can make the mock objects as expressive as we want.&lt;/p&gt;
-
-&lt;h1 id=&quot;handmade-spies&quot;&gt;Handmade Spies&lt;/h1&gt;
-&lt;p&gt;Another function that mocking libraries provide is the ability to check whether or not a method on a mock object was called correctly.&lt;/p&gt;
-
-&lt;p&gt;Going back to our file system, lets add a new method to delete a file. We will want to make sure that this method was invoked correctly.&lt;/p&gt;
-
-&lt;p&gt;Let us extend on &lt;code&gt;FileSystem&lt;/code&gt;, this time recording what files were deleted. We will also delete the file from our MockFileSystem to ensure it is kept consistent with the real file system.&lt;/p&gt;
-
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MockFileSystem&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileSystem&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;deletedFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MockFileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;files&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;deletedFiles&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MockFileSystem&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;createWithFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;MockFileSystem&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;readFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;nd&quot;&gt;@Override&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deleteFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;files&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;deletedFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getDeletedFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;deletedFiles&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-
-&lt;p&gt;In our unit tests, we can now use the &lt;code&gt;getDeletedFiles()&lt;/code&gt; method to check that a particular file was in fact deleted.&lt;/p&gt;
-
-&lt;h1 id=&quot;summary&quot;&gt;Summary&lt;/h1&gt;
-&lt;p&gt;Mocking libraries can be useful for times when duplication isn’t going to be an issue and the mock behaviour is simple. However if you find that you are duplicating mock behaviour in many unit tests, or your mock objects are non-trivial, then handmade mock objects may be a better option. In my experience, I’ve found them to be a better option for protecting your unit tests against change.&lt;/p&gt;
-</description>
-        <pubDate>Mon, 29 Jun 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/java/2015/06/29/2015-06-26-hand-rolling-java-mocks.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/java/2015/06/29/2015-06-26-hand-rolling-java-mocks.html</guid>
-        
-        
-        <category>java</category>
         
       </item>
     
