@@ -27,7 +27,7 @@ We'll be building several docker images. When building a docker image, we will b
 
 `docker pull ruby:2.2.2`
 
-`docker pull nginx`
+`docker pull redis`
 
 **Task: Clone this [github repo](https://github.com/c-j-j/docker-workshop/).**
 
