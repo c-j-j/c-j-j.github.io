@@ -6,9 +6,118 @@
 </description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 01 Jun 2016 20:13:01 +0100</pubDate>
-    <lastBuildDate>Wed, 01 Jun 2016 20:13:01 +0100</lastBuildDate>
+    <pubDate>Tue, 21 Feb 2017 20:46:54 +0000</pubDate>
+    <lastBuildDate>Tue, 21 Feb 2017 20:46:54 +0000</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Linear Regression with Gradient Descent in Clojure</title>
+        <description>&lt;p&gt;This blog post describes how I tackled the first exercise assignment in Andrew Ng’s machine learning course on Coursera. We will be going through univariate linear regression (linear regression with a single feature), and using gradient descent to train our algorithm to find the most optimal values to provide the most accurate estimates.&lt;/p&gt;
+
+&lt;p&gt;My solution is hosted &lt;a href=&quot;https://github.com/c-j-j/clojure-machine-learning/blob/master/src/machine_learning/linear-regression.clj&quot;&gt;here&lt;/a&gt;. You may wish to check out the code, start a REPL and evaluate the various expressions as we go through them. &lt;strong&gt;This is one of the reasons why I’m using clojure to learn machine learning, the ability to interact with the code to understand it is second to none.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Our data looks like the following;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1101&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;592&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5277&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1302&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The first column is the &lt;strong&gt;population of some city&lt;/strong&gt;, and the second column is the amount of &lt;strong&gt;profit&lt;/strong&gt; that can be made in that city for a food truck. The problem that we are trying to solve is given an arbitrary city’s population, to predict how much profit can be made there.&lt;/p&gt;
+
+&lt;p&gt;The first thing we need to do is read the data from the file.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-csv&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-open &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;in-file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;io/reader&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;src/machine_learning/ex1_data.csv&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;doall&lt;/span&gt;
+   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;csv/read-csv&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;in-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read-csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Let’s start defining some values;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;; the learning rate for our algorithm&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;iterations&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;; how many iterations do we run gradient descent&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;xs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comp &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;;our feature vector, parsed as numbers&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comp &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;;our output vector, also parsed as numbers&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-of-examples&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;initial-theta&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Our final goal is finding the best values for &lt;code&gt;theta&lt;/code&gt; to give the most accurate prediction in our algorithm.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We need to provide our algorithm with a matrix, &lt;code&gt;X&lt;/code&gt; instead of the vector xs that we currently have. We will build the &lt;code&gt;X&lt;/code&gt; matrix as follows;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;repeat &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-of-examples&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/transpose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We’ll be making use of the &lt;a href=&quot;https://github.com/mikera/core.matrix&quot;&gt;core.matrix&lt;/a&gt; library for our matrix operations.&lt;/p&gt;
+
+&lt;p&gt;The above code snippet takes our input vector, &lt;code&gt;xs&lt;/code&gt;, which is &lt;code&gt;(6.1101, 5.5277)&lt;/code&gt;, and converts it to a matrix where the first column are set to all ones.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;;[[1, 6.1101]&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; [1, 5.5277]&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;;; [1, 10.5277]]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The ones column is added for finding our value of &lt;code&gt;theta&lt;/code&gt;. The reason why we add it is so we can multiple the matrices &lt;code&gt;X&lt;/code&gt; and &lt;code&gt;theta&lt;/code&gt;. Without the ones column, the matrix sizes mismatch.&lt;/p&gt;
+
+&lt;h2 id=&quot;implementing-gradient-descent&quot;&gt;Implementing gradient descent&lt;/h2&gt;
+&lt;p&gt;Our main gradient descent algorithm looks like the following;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;gradient-descent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number-of-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;loop &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remaining-iterations&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number-of-iterations&lt;/span&gt;
+         &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zero? &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recur&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dec &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/sub&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cost-derivative&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;We are recursively calling gradient descent until the &lt;code&gt;remaining iterations&lt;/code&gt; reaches zero. During each recursive call, we are updating &lt;code&gt;theta&lt;/code&gt; whereby after each iteration it becomes more accurate and provides more accurate results when it’ll be used later on.&lt;/p&gt;
+
+&lt;p&gt;We update &lt;code&gt;theta&lt;/code&gt; by subtracting the &lt;code&gt;theta&lt;/code&gt; vector by the derivative of the cost function by doing &lt;code&gt;(matrix/sub theta (cost-derivative X y theta))&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;To calculate the cost derivation, we define the following function;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cost-derivative&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prediction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hypothesis&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prediction&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/sub&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mmul&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mul&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/ &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number-of-examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The first important step here is using our current guess of what theta is, how accurate is this when we use the current theta using the real input features, &lt;code&gt;X&lt;/code&gt; and real output vector, y.&lt;/p&gt;
+
+&lt;p&gt;Our prediction function which takes in our input features and &lt;code&gt;theta&lt;/code&gt; looks like the following;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hypothesis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mmul&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This is why we needed to have the ones column, otherwise this call would fail as the number of columns in X wouldn’t match the number of rows in &lt;code&gt;theta&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So if we have X defined as;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;mf&quot;&gt;6.11011&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;mf&quot;&gt;5.52773&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;And &lt;code&gt;theta&lt;/code&gt; defined as &lt;code&gt;[0 0]&lt;/code&gt;. Then multiplying &lt;code&gt;X&lt;/code&gt; by &lt;code&gt;theta&lt;/code&gt; gives us a new vector with the value &lt;code&gt;[0, 0]&lt;/code&gt;. If we compare &lt;code&gt;[0, 0]&lt;/code&gt; with the actual values of &lt;code&gt;y&lt;/code&gt;, &lt;code&gt;[17.592 9.1302]&lt;/code&gt;, we can see our guess of &lt;code&gt;theta&lt;/code&gt; is not producing the right guess for y. We then subtract the current value of &lt;code&gt;theta&lt;/code&gt;, in this case &lt;code&gt;[0 0]&lt;/code&gt;, by the value of the &lt;code&gt;cost-derivative&lt;/code&gt; function. The next time we multiple &lt;code&gt;X&lt;/code&gt; by &lt;code&gt;theta&lt;/code&gt;, that will yield a more accurate prediction for the output.&lt;/p&gt;
+</description>
+        <pubDate>Fri, 17 Feb 2017 00:00:00 +0000</pubDate>
+        <link>http://yourdomain.com/clojure/linear/regression/machine/learning/2017/02/17/linear-regression-in-clojure.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/clojure/linear/regression/machine/learning/2017/02/17/linear-regression-in-clojure.html</guid>
+        
+        
+        <category>clojure</category>
+        
+        <category>linear</category>
+        
+        <category>regression</category>
+        
+        <category>machine</category>
+        
+        <category>learning</category>
+        
+      </item>
     
       <item>
         <title>Docker Workshop - Part One</title>
@@ -676,39 +785,6 @@
         <category>software</category>
         
         <category>development</category>
-        
-      </item>
-    
-      <item>
-        <title>Clojure First Impressions</title>
-        <description>&lt;h2 id=&quot;clojure-first-impressions&quot;&gt;Clojure First Impressions&lt;/h2&gt;
-
-&lt;p&gt;I’ve been working on Clojure for the last couple of days, and thus far it has made a big impression on me.&lt;/p&gt;
-
-&lt;p&gt;I started off with the Clojure Koans, which I didn’t find particularly helpful. I found the nature of filling in the blanks a little too easy and not very educational.&lt;/p&gt;
-
-&lt;p&gt;After this, I did several of the the &lt;a href=&quot;https://www.4clojure.com/&quot;&gt;4Clojure&lt;/a&gt; problems, which I found far more helpful in learning a new language, as you need to think a little more about what you are doing.&lt;/p&gt;
-
-&lt;p&gt;With a few examples of 4Clojure done, I started on my TicTacToe and as I’ve done in the other OO programming languages, my first unit test was to create a Board object. I quickly realised how silly this was in a functional language, as there are no constructors in Clojure which I’m used to. In fact, although Clojure does give some options to work with state (i.e. atoms/refs), it seems the convention to not use instance variables that have their own state.&lt;/p&gt;
-
-&lt;p&gt;I’m not so sure about this approach, as I’m so used to working with objects that contain state. It seems like I’m working with a bunch of static classes/methods in an OO language.&lt;/p&gt;
-
-&lt;p&gt;However, because Clojure gives you so much flexibility when it comes to composing functions, it makes data feel like play-doh where I can mangle it anyway I please. This means that those ‘static’ methods can do a huge amount with a small amount of code.&lt;/p&gt;
-
-&lt;p&gt;I’m using Midje as a testing library, and I’m finding it an excellent way of learning the language. It runs tests on file changes and displays readable output with colour, but it also has a REPL which I feel really helps improve workflow.&lt;/p&gt;
-
-&lt;p&gt;With the OO languages I am used to working with, I strived towards having data behind some abstraction and only being able to access that data through methods on an object. That gives me the option to change the underlying data structure without affecting clients of that object.&lt;/p&gt;
-
-&lt;p&gt;With Clojure, the data (hash maps, vectors, lists) are piped across the application instead. I’m concerned that changes will ripple across the application.&lt;/p&gt;
-
-&lt;p&gt;I’m really looking forward to learning more about this language, and will post an update to see if my concerns that I’ve posted here were short-lived.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 09 Apr 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/clojure/2015/04/09/clojure-first-impressions.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/clojure/2015/04/09/clojure-first-impressions.html</guid>
-        
-        
-        <category>clojure</category>
         
       </item>
     
