@@ -1,8 +1,7 @@
 ---
 layout: page
-title: About
-permalink: /about/
+title: Skills
+permalink: /skills/
 ---
 
 Coming soon.
-

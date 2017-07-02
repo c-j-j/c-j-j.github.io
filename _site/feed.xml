@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Chris Jordan - Blog</title>
+    <title>Chris Jordan</title>
     <description>Welcome to my blog. I am a Resident Apprentice at 8th Light in London.
 </description>
-    <link>http://yourdomain.com/</link>
-    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 21 Feb 2017 20:46:54 +0000</pubDate>
-    <lastBuildDate>Tue, 21 Feb 2017 20:46:54 +0000</lastBuildDate>
-    <generator>Jekyll v2.5.3</generator>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 02 Jul 2017 12:16:59 +0100</pubDate>
+    <lastBuildDate>Sun, 02 Jul 2017 12:16:59 +0100</lastBuildDate>
+    <generator>Jekyll v3.4.0</generator>
     
       <item>
         <title>Linear Regression with Gradient Descent in Clojure</title>
@@ -18,93 +18,93 @@
 
 &lt;p&gt;Our data looks like the following;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1101&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;592&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1101&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;17&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;592&lt;/span&gt;
 &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5277&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1302&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The first column is the &lt;strong&gt;population of some city&lt;/strong&gt;, and the second column is the amount of &lt;strong&gt;profit&lt;/strong&gt; that can be made in that city for a food truck. The problem that we are trying to solve is given an arbitrary city’s population, to predict how much profit can be made there.&lt;/p&gt;
 
 &lt;p&gt;The first thing we need to do is read the data from the file.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-csv&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-open &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;in-file&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;io/reader&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;src/machine_learning/ex1_data.csv&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;doall&lt;/span&gt;
-   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;csv/read-csv&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;in-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read-csv&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;with-open&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in-file&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;io/reader&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;src/machine_learning/ex1_data.csv&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;doall&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;csv/read-csv&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in-file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read-csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;read-csv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Let’s start defining some values;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;; the learning rate for our algorithm&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;iterations&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;; how many iterations do we run gradient descent&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;xs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comp &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;;our feature vector, parsed as numbers&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comp &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;read-string&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;;;our output vector, also parsed as numbers&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-of-examples&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;initial-theta&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; the learning rate for our algorithm
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iterations&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;; how many iterations do we run gradient descent
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comp&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read-string&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;our feature vector, parsed as numbers
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;comp&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;read-string&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;our output vector, also parsed as numbers
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number-of-examples&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;initial-theta&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;strong&gt;Our final goal is finding the best values for &lt;code&gt;theta&lt;/code&gt; to give the most accurate prediction in our algorithm.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Our final goal is finding the best values for &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; to give the most accurate prediction in our algorithm.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;We need to provide our algorithm with a matrix, &lt;code&gt;X&lt;/code&gt; instead of the vector xs that we currently have. We will build the &lt;code&gt;X&lt;/code&gt; matrix as follows;&lt;/p&gt;
+&lt;p&gt;We need to provide our algorithm with a matrix, &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; instead of the vector xs that we currently have. We will build the &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; matrix as follows;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;repeat &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;number-of-examples&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-           &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/transpose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;repeat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number-of-examples&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+           &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+           &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/transpose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;We’ll be making use of the &lt;a href=&quot;https://github.com/mikera/core.matrix&quot;&gt;core.matrix&lt;/a&gt; library for our matrix operations.&lt;/p&gt;
 
-&lt;p&gt;The above code snippet takes our input vector, &lt;code&gt;xs&lt;/code&gt;, which is &lt;code&gt;(6.1101, 5.5277)&lt;/code&gt;, and converts it to a matrix where the first column are set to all ones.&lt;/p&gt;
+&lt;p&gt;The above code snippet takes our input vector, &lt;code class=&quot;highlighter-rouge&quot;&gt;xs&lt;/code&gt;, which is &lt;code class=&quot;highlighter-rouge&quot;&gt;(6.1101, 5.5277)&lt;/code&gt;, and converts it to a matrix where the first column are set to all ones.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;;[[1, 6.1101]&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; [1, 5.5277]&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; ...&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;;; [1, 10.5277]]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;;;[[1, 6.1101]
+;; [1, 5.5277]
+;; ...
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;10.5277&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;The ones column is added for finding our value of &lt;code&gt;theta&lt;/code&gt;. The reason why we add it is so we can multiple the matrices &lt;code&gt;X&lt;/code&gt; and &lt;code&gt;theta&lt;/code&gt;. Without the ones column, the matrix sizes mismatch.&lt;/p&gt;
+&lt;p&gt;The ones column is added for finding our value of &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt;. The reason why we add it is so we can multiple the matrices &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt;. Without the ones column, the matrix sizes mismatch.&lt;/p&gt;
 
 &lt;h2 id=&quot;implementing-gradient-descent&quot;&gt;Implementing gradient descent&lt;/h2&gt;
 &lt;p&gt;Our main gradient descent algorithm looks like the following;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;gradient-descent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number-of-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;loop &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remaining-iterations&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number-of-iterations&lt;/span&gt;
-         &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zero? &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recur&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dec &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-             &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/sub&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cost-derivative&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gradient-descent&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number-of-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number-of-iterations&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zero?&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recur&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dec&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;remaining-iterations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+             &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/sub&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;cost-derivative&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;We are recursively calling gradient descent until the &lt;code&gt;remaining iterations&lt;/code&gt; reaches zero. During each recursive call, we are updating &lt;code&gt;theta&lt;/code&gt; whereby after each iteration it becomes more accurate and provides more accurate results when it’ll be used later on.&lt;/p&gt;
+&lt;p&gt;We are recursively calling gradient descent until the &lt;code class=&quot;highlighter-rouge&quot;&gt;remaining iterations&lt;/code&gt; reaches zero. During each recursive call, we are updating &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; whereby after each iteration it becomes more accurate and provides more accurate results when it’ll be used later on.&lt;/p&gt;
 
-&lt;p&gt;We update &lt;code&gt;theta&lt;/code&gt; by subtracting the &lt;code&gt;theta&lt;/code&gt; vector by the derivative of the cost function by doing &lt;code&gt;(matrix/sub theta (cost-derivative X y theta))&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;We update &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; by subtracting the &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; vector by the derivative of the cost function by doing &lt;code class=&quot;highlighter-rouge&quot;&gt;(matrix/sub theta (cost-derivative X y theta))&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;To calculate the cost derivation, we define the following function;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;cost-derivative&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prediction&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hypothesis&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prediction&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/sub&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mmul&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mul&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/ &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;alpha&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number-of-examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cost-derivative&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prediction&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hypothesis&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prediction&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/sub&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mmul&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mul&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number-of-examples&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;The first important step here is using our current guess of what theta is, how accurate is this when we use the current theta using the real input features, &lt;code&gt;X&lt;/code&gt; and real output vector, y.&lt;/p&gt;
+&lt;p&gt;The first important step here is using our current guess of what theta is, how accurate is this when we use the current theta using the real input features, &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; and real output vector, y.&lt;/p&gt;
 
-&lt;p&gt;Our prediction function which takes in our input features and &lt;code&gt;theta&lt;/code&gt; looks like the following;&lt;/p&gt;
+&lt;p&gt;Our prediction function which takes in our input features and &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; looks like the following;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;hypothesis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mmul&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;X&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hypothesis&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;matrix/mmul&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;theta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;This is why we needed to have the ones column, otherwise this call would fail as the number of columns in X wouldn’t match the number of rows in &lt;code&gt;theta&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This is why we needed to have the ones column, otherwise this call would fail as the number of columns in X wouldn’t match the number of rows in &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;So if we have X defined as;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;mf&quot;&gt;6.11011&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  
-&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;, &lt;span class=&quot;mf&quot;&gt;5.52773&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;6.11011&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.52773&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;And &lt;code&gt;theta&lt;/code&gt; defined as &lt;code&gt;[0 0]&lt;/code&gt;. Then multiplying &lt;code&gt;X&lt;/code&gt; by &lt;code&gt;theta&lt;/code&gt; gives us a new vector with the value &lt;code&gt;[0, 0]&lt;/code&gt;. If we compare &lt;code&gt;[0, 0]&lt;/code&gt; with the actual values of &lt;code&gt;y&lt;/code&gt;, &lt;code&gt;[17.592 9.1302]&lt;/code&gt;, we can see our guess of &lt;code&gt;theta&lt;/code&gt; is not producing the right guess for y. We then subtract the current value of &lt;code&gt;theta&lt;/code&gt;, in this case &lt;code&gt;[0 0]&lt;/code&gt;, by the value of the &lt;code&gt;cost-derivative&lt;/code&gt; function. The next time we multiple &lt;code&gt;X&lt;/code&gt; by &lt;code&gt;theta&lt;/code&gt;, that will yield a more accurate prediction for the output.&lt;/p&gt;
+&lt;p&gt;And &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; defined as &lt;code class=&quot;highlighter-rouge&quot;&gt;[0 0]&lt;/code&gt;. Then multiplying &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; by &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; gives us a new vector with the value &lt;code class=&quot;highlighter-rouge&quot;&gt;[0, 0]&lt;/code&gt;. If we compare &lt;code class=&quot;highlighter-rouge&quot;&gt;[0, 0]&lt;/code&gt; with the actual values of &lt;code class=&quot;highlighter-rouge&quot;&gt;y&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;[17.592 9.1302]&lt;/code&gt;, we can see our guess of &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt; is not producing the right guess for y. We then subtract the current value of &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt;, in this case &lt;code class=&quot;highlighter-rouge&quot;&gt;[0 0]&lt;/code&gt;, by the value of the &lt;code class=&quot;highlighter-rouge&quot;&gt;cost-derivative&lt;/code&gt; function. The next time we multiple &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; by &lt;code class=&quot;highlighter-rouge&quot;&gt;theta&lt;/code&gt;, that will yield a more accurate prediction for the output.&lt;/p&gt;
 </description>
         <pubDate>Fri, 17 Feb 2017 00:00:00 +0000</pubDate>
-        <link>http://yourdomain.com/clojure/linear/regression/machine/learning/2017/02/17/linear-regression-in-clojure.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/clojure/linear/regression/machine/learning/2017/02/17/linear-regression-in-clojure.html</guid>
+        <link>http://localhost:4000/clojure/linear/regression/machine/learning/2017/02/17/linear-regression-in-clojure.html</link>
+        <guid isPermaLink="true">http://localhost:4000/clojure/linear/regression/machine/learning/2017/02/17/linear-regression-in-clojure.html</guid>
         
         
         <category>clojure</category>
@@ -131,30 +131,30 @@
 
 &lt;p&gt;In the interest of time, it’ll be best for you to have docker installed prior to the workshop, and for you to pull a few Docker base images, just in case the Internet suddenly stops.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: &lt;a href=&quot;https://docs.docker.com/mac/step_one/&quot;&gt;install docker&lt;/a&gt;, and run &lt;code&gt;docker run hello-world&lt;/code&gt; to ensure that docker is installed correctly.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: &lt;a href=&quot;https://docs.docker.com/mac/step_one/&quot;&gt;install docker&lt;/a&gt;, and run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run hello-world&lt;/code&gt; to ensure that docker is installed correctly.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;We’ll be building several docker images. When building a docker image, we will be using base images to make life a little easier for us.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Task: Download the next base images&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker pull ubuntu&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker pull ubuntu&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker pull ruby:2.2.2&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker pull ruby:2.2.2&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker pull redis&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker pull redis&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Task: Clone this &lt;a href=&quot;https://github.com/c-j-j/docker-workshop/&quot;&gt;github repo&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;step-zero-running-a-docker-image-from-the-docker-hub&quot;&gt;Step Zero: Running a docker image from the Docker Hub&lt;/h1&gt;
 &lt;p&gt;Let’s dive straight in to running a docker container from your laptop. The &lt;a href=&quot;https://hub.docker.com/explore/&quot;&gt;Docker Hub&lt;/a&gt; has lots of images that you can pull from the hub and run on your local machine.&lt;/p&gt;
 
-&lt;p&gt;For example, we can pull the ubuntu base image, and run &lt;code&gt;docker run ubuntu echo &quot;Hello World&quot;&lt;/code&gt;. If you had pulled the Ubuntu image earlier, then the image will already be on your machine and you should see “Hello World” appear. If you hadn’t done the step, it’ll just pull it from the hub prior to running.&lt;/p&gt;
+&lt;p&gt;For example, we can pull the ubuntu base image, and run &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run ubuntu echo &quot;Hello World&quot;&lt;/code&gt;. If you had pulled the Ubuntu image earlier, then the image will already be on your machine and you should see “Hello World” appear. If you hadn’t done the step, it’ll just pull it from the hub prior to running.&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker run&lt;/code&gt; starts a new container with the image you have specified, in this case we used the ubuntu image. An &lt;strong&gt;image&lt;/strong&gt; is like a blueprint, and a &lt;strong&gt;container&lt;/strong&gt; is the process that actually gets run based on the image.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run&lt;/code&gt; starts a new container with the image you have specified, in this case we used the ubuntu image. An &lt;strong&gt;image&lt;/strong&gt; is like a blueprint, and a &lt;strong&gt;container&lt;/strong&gt; is the process that actually gets run based on the image.&lt;/p&gt;
 
 &lt;p&gt;To see what exactly is in this container, we can run bash inside the container and then start to explore what it actually consists of.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Run the following commands inside the ubuntu container; &lt;code&gt;pwd&lt;/code&gt;, &lt;code&gt;ls&lt;/code&gt;, &lt;code&gt;ps&lt;/code&gt;, &lt;code&gt;whoami&lt;/code&gt;. Run a bash session inside the container (you’ll need to pass –interactive –tty as arguments)&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Run the following commands inside the ubuntu container; &lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;whoami&lt;/code&gt;. Run a bash session inside the container (you’ll need to pass –interactive –tty as arguments)&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;step-one-building-a-docker-image&quot;&gt;Step One: Building a docker image&lt;/h1&gt;
 &lt;p&gt;In the github repo, navigate to step_one where you will find a simple ruby file named simple.rb. Step one involves running this small program inside a docker container.&lt;/p&gt;
@@ -163,31 +163,31 @@
 
 &lt;p&gt;We have a choice on how to build the image. We &lt;em&gt;could&lt;/em&gt; build an image based on the Ubuntu official image, something like the following;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ubuntu&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ubuntu&lt;/span&gt;
 
 &lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;apt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;update&lt;/span&gt;
 
-&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;P&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;P&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;org&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gz&lt;/span&gt;
 
-&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xvf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gz&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xvf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gz&lt;/span&gt;
 
-&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;/configure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;no&quot;&gt;RUN&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/root/s&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;This will build a base image from Ubuntu, run &lt;code&gt;apt-get update&lt;/code&gt; and then install ruby 2.2.2, but that isn’t necessary as the Docker Hub already contains a ruby base image that we can use instead.&lt;/p&gt;
+&lt;p&gt;This will build a base image from Ubuntu, run &lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get update&lt;/code&gt; and then install ruby 2.2.2, but that isn’t necessary as the Docker Hub already contains a ruby base image that we can use instead.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Create a Dockerfile and base the image from &lt;code&gt;ruby:2.2.2&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Create a Dockerfile and base the image from &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby:2.2.2&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;We can now build an image using this Dockerfile. In the same directory as the Dockerfile, run;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker build .&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker build .&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;You should now be able to see your new image using;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker images&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker images&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;Make a note of the image ID for the image you have just built.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Run a new container with the image ID that you just built, and run the command &lt;code&gt;ruby --version&lt;/code&gt; inside the docker container to ensure the container has the correct version of ruby installed.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Run a new container with the image ID that you just built, and run the command &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby --version&lt;/code&gt; inside the docker container to ensure the container has the correct version of ruby installed.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;In order to make working with docker easier, we can give our image a name by tagging it.&lt;/p&gt;
 
@@ -202,9 +202,9 @@
 
 &lt;p&gt;&lt;strong&gt;Task: Copy over the simple.rb file to the container.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;We &lt;em&gt;could&lt;/em&gt; run the program with &lt;code&gt;docker run chrisjordan/docker_demo ruby simple.rb&lt;/code&gt;. However we can define a default command that gets run inside the Dockerfile using CMD. For example we could do &lt;code&gt;CMD [&quot;ruby&quot;, &quot;--version&quot;]&lt;/code&gt; to print the ruby version by default.&lt;/p&gt;
+&lt;p&gt;We &lt;em&gt;could&lt;/em&gt; run the program with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run chrisjordan/docker_demo ruby simple.rb&lt;/code&gt;. However we can define a default command that gets run inside the Dockerfile using CMD. For example we could do &lt;code class=&quot;highlighter-rouge&quot;&gt;CMD [&quot;ruby&quot;, &quot;--version&quot;]&lt;/code&gt; to print the ruby version by default.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Set &lt;code&gt;ruby simple.rb&lt;/code&gt; as the default command.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Set &lt;code class=&quot;highlighter-rouge&quot;&gt;ruby simple.rb&lt;/code&gt; as the default command.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Rebuild the image. Now run the new container. You should now see the output of the ruby program. Good times!&lt;/p&gt;
 
@@ -221,19 +221,19 @@
     &lt;p&gt;Base the image from the ruby base image&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Set the working directory with &lt;code&gt;WORKDIR /var/app&lt;/code&gt;&lt;/p&gt;
+    &lt;p&gt;Set the working directory with &lt;code class=&quot;highlighter-rouge&quot;&gt;WORKDIR /var/app&lt;/code&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Expose the port we want to access with &lt;code&gt;EXPOSE 4567&lt;/code&gt;&lt;/p&gt;
+    &lt;p&gt;Expose the port we want to access with &lt;code class=&quot;highlighter-rouge&quot;&gt;EXPOSE 4567&lt;/code&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;Copy over the lib directory and the Gemfile&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Add &lt;code&gt;RUN bundle install&lt;/code&gt; to install the ruby dependencies.&lt;/p&gt;
+    &lt;p&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;RUN bundle install&lt;/code&gt; to install the ruby dependencies.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Add &lt;code&gt;CMD [&quot;ruby&quot;, &quot;lib/app.rb&quot;]&lt;/code&gt; to run the application.&lt;/p&gt;
+    &lt;p&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;CMD [&quot;ruby&quot;, &quot;lib/app.rb&quot;]&lt;/code&gt; to run the application.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ol&gt;
 
@@ -243,56 +243,56 @@
 
 &lt;p&gt;This is because the port on your local machine needs to forward requests to the container. Stop the container, and run it again as follows;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;docker run -p &quot;4567:4567&quot; chrisjordan/docker_demo&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run -p &quot;4567:4567&quot; chrisjordan/docker_demo&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;This forwards port 4567 from your machine to 4567 on the container. Now you should be able to view the app in your browser. but how you access that depends on whether you’re using Docker for Mac or Docker Machine;&lt;/p&gt;
 
 &lt;h1 id=&quot;docker-for-maclinux-vs-docker-machinevirtualbox&quot;&gt;Docker for Mac/Linux vs Docker Machine/VirtualBox&lt;/h1&gt;
 &lt;p&gt;Depending on how you installed Docker changes how you can access the container. If you have Docker for Mac, you can go to your internet browser and access the app with “localhost:4567”.&lt;/p&gt;
 
-&lt;p&gt;If you are running Docker in a VM using VirtualBox and used &lt;code&gt;docker-machine&lt;/code&gt; to start the docker VM, then you will need to find the IP address of the docker VM. You should be able to get this IP with &lt;code&gt;docker-machine ip default&lt;/code&gt; (or whatever name you chose for your local docker machine). You can then view the app using “192.168.99.104:4567” or whatever the IP address of your docker VM is running on.&lt;/p&gt;
+&lt;p&gt;If you are running Docker in a VM using VirtualBox and used &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-machine&lt;/code&gt; to start the docker VM, then you will need to find the IP address of the docker VM. You should be able to get this IP with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-machine ip default&lt;/code&gt; (or whatever name you chose for your local docker machine). You can then view the app using “192.168.99.104:4567” or whatever the IP address of your docker VM is running on.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: At the moment, every time you change something in the lib directory, the dependencies are going to be fetched during &lt;code&gt;bundle install&lt;/code&gt;. Copy the Gemfile and do the bundle install before you copy over the lib directory, and then rebuild the image. You should notice that you can make changes to the lib directory, and not have to fetch the dependencies again.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: At the moment, every time you change something in the lib directory, the dependencies are going to be fetched during &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;. Copy the Gemfile and do the bundle install before you copy over the lib directory, and then rebuild the image. You should notice that you can make changes to the lib directory, and not have to fetch the dependencies again.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;accessing-a-running-container&quot;&gt;Accessing a running container&lt;/h1&gt;
-&lt;p&gt;We can run the docker image in daemon mode, as follows &lt;code&gt;docker run -d -p &quot;4567:4567&quot; chrisjordan/docker_demo&lt;/code&gt;. You can see a list of all running containers by using &lt;code&gt;docker ps&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;We can run the docker image in daemon mode, as follows &lt;code class=&quot;highlighter-rouge&quot;&gt;docker run -d -p &quot;4567:4567&quot; chrisjordan/docker_demo&lt;/code&gt;. You can see a list of all running containers by using &lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Find the container ID of the running container, and access it with &lt;code&gt;docker exec --interactive --tty CONTAINER_ID bash&lt;/code&gt;&lt;/strong&gt;. You can find the running ruby process with &lt;code&gt;ps -elf&lt;/code&gt;, or curl the sinatra app by using &lt;code&gt;curl localhost:4567&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Find the container ID of the running container, and access it with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker exec --interactive --tty CONTAINER_ID bash&lt;/code&gt;&lt;/strong&gt;. You can find the running ruby process with &lt;code class=&quot;highlighter-rouge&quot;&gt;ps -elf&lt;/code&gt;, or curl the sinatra app by using &lt;code class=&quot;highlighter-rouge&quot;&gt;curl localhost:4567&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h1 id=&quot;looking-at-logs&quot;&gt;Looking at logs&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;Task: View the logs of the running docker container by doing &lt;code&gt;docker logs CONTAINER_ID&lt;/code&gt;. You can pass &lt;code&gt;--follow&lt;/code&gt; to tail the log.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: View the logs of the running docker container by doing &lt;code class=&quot;highlighter-rouge&quot;&gt;docker logs CONTAINER_ID&lt;/code&gt;. You can pass &lt;code class=&quot;highlighter-rouge&quot;&gt;--follow&lt;/code&gt; to tail the log.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;killing-a-running-container&quot;&gt;Killing a running container&lt;/h1&gt;
-&lt;p&gt;To kill the container, execute &lt;code&gt;docker kill CONTAINER_ID&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To kill the container, execute &lt;code class=&quot;highlighter-rouge&quot;&gt;docker kill CONTAINER_ID&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;You should no longer see the running container by running &lt;code&gt;docker ps&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You should no longer see the running container by running &lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps&lt;/code&gt;.&lt;/p&gt;
 
 &lt;h1 id=&quot;mounting-a-volume&quot;&gt;Mounting a volume&lt;/h1&gt;
 &lt;p&gt;Run the sinatra container again. Try making a change to the text in lib/app.rb on your host machine to return a different message. You will not see your updated message. Which is really rather unfortunate. Please don’t cry, we can fix that!&lt;/p&gt;
 
 &lt;p&gt;Right now the file system inside the container is isolated from your local environment. We can mount a volume, which means creating a link between the files on your machine with files on the container.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Run the docker container with a mounting volume by adding &lt;code&gt;-v `pwd`:/var/app&lt;/code&gt; when you run the new container. This will mount the step_two directory on your host machine to /var/app on the container.&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Run the docker container with a mounting volume by adding &lt;code class=&quot;highlighter-rouge&quot;&gt;-v `pwd`:/var/app&lt;/code&gt; when you run the new container. This will mount the step_two directory on your host machine to /var/app on the container.&lt;/strong&gt;.&lt;/p&gt;
 
 &lt;p&gt;Now that the docker container is running, you should now see changes being picked up. Yay!&lt;/p&gt;
 
 &lt;h1 id=&quot;running-tests-in-the-containers&quot;&gt;Running tests in the containers&lt;/h1&gt;
 &lt;p&gt;You can run tests inside your container, which is useful for CI or when another developer would like to run the unit tests without having to configure their own environment to do so.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Copy over the spec directory to the container, and run the container with the command &lt;code&gt;rspec&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Copy over the spec directory to the container, and run the container with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;rspec&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;pushing-your-image-to-the-docker-hub&quot;&gt;Pushing your image to the Docker Hub&lt;/h1&gt;
 &lt;p&gt;Now we have our image that’s built, we can push it to the &lt;a href=&quot;https://hub.docker.com/&quot;&gt;Docker Hub&lt;/a&gt; for the entire world to check out. For this task, you will need to have an account registered with Docker.&lt;/p&gt;
 
-&lt;p&gt;We need to tag the image we have built with our docker username. Find the most recently built image with &lt;code&gt;docker images&lt;/code&gt;, and make a note of the image ID.&lt;/p&gt;
+&lt;p&gt;We need to tag the image we have built with our docker username. Find the most recently built image with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker images&lt;/code&gt;, and make a note of the image ID.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Task: Tag the image with your username - &lt;code&gt;docker tag IMAGE_ID chrisjordan/docker_demo:1.0&lt;/code&gt;, making sure you replace &lt;code&gt;chrisjordan&lt;/code&gt; with your docker username. You’re free to select what name you’d like to tag, I’ve chosen “docker_demo”, and the version I’ve used “1.0” here.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Task: Tag the image with your username - &lt;code class=&quot;highlighter-rouge&quot;&gt;docker tag IMAGE_ID chrisjordan/docker_demo:1.0&lt;/code&gt;, making sure you replace &lt;code class=&quot;highlighter-rouge&quot;&gt;chrisjordan&lt;/code&gt; with your docker username. You’re free to select what name you’d like to tag, I’ve chosen “docker_demo”, and the version I’ve used “1.0” here.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;NOTE: Ensure you give the image a version ID when you’re pushing your image to the hub. If you don’t specify a version, it’ll use &lt;code&gt;latest&lt;/code&gt; which can result in ambiguity between docker images.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NOTE: Ensure you give the image a version ID when you’re pushing your image to the hub. If you don’t specify a version, it’ll use &lt;code class=&quot;highlighter-rouge&quot;&gt;latest&lt;/code&gt; which can result in ambiguity between docker images.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Log in to docker with &lt;code&gt;docker login --username=your-user-name&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Log in to docker with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker login --username=your-user-name&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Now you’re ready to push your image to the docker hub. &lt;code&gt;docker push chrisjordan/docker_demo:1.0&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now you’re ready to push your image to the docker hub. &lt;code class=&quot;highlighter-rouge&quot;&gt;docker push chrisjordan/docker_demo:1.0&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;This is going to take a while. If my calculations are correct, you’ll be uploading around 200MB to the docker hub. Feel free to have a cup of tea at this time.&lt;/strong&gt;&lt;/p&gt;
 
@@ -307,22 +307,22 @@
 
 &lt;p&gt;&lt;strong&gt;Task: Create a docker-compose.yml file in step_there with the following contents, replacing the image from “chrisjordan/docker_demo:1” with your docker image;&lt;/strong&gt;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;ss&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;2&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;ss&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;ss&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chrisjordan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;docker_demo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;4567:4567&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;ss&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;ss&quot;&gt;version: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'2'&lt;/span&gt;
+&lt;span class=&quot;ss&quot;&gt;services:
+  web:
+    image: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chrisjordan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;docker_demo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;ports:
+      &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;4567:4567&quot;&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;depends_on:
+      &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;Task: Add a service with the name “db” and the image set to “redis”.&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;Spin up the containers with &lt;code&gt;docker-compose up&lt;/code&gt;. This will automatically pick up your docker-compose.yml file as this is the default filename that it looks for.&lt;/p&gt;
+&lt;p&gt;Spin up the containers with &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose up&lt;/code&gt;. This will automatically pick up your docker-compose.yml file as this is the default filename that it looks for.&lt;/p&gt;
 
-&lt;p&gt;Try to access the app at localhost:4567 (or &lt;code&gt;docker-machine ip default&lt;/code&gt;:4567 for those not using Docker for Mac). You’ll get an error because the sinatra app can’t find the redis container.&lt;/p&gt;
+&lt;p&gt;Try to access the app at localhost:4567 (or &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-machine ip default&lt;/code&gt;:4567 for those not using Docker for Mac). You’ll get an error because the sinatra app can’t find the redis container.&lt;/p&gt;
 
-&lt;p&gt;When we link together containers, docker-compose allows one container to talk to another through the name of the service defined in the docker compose file. This means the web container can access the db container with the host &lt;code&gt;db:6379&lt;/code&gt; (as 6479 is the default redis port).&lt;/p&gt;
+&lt;p&gt;When we link together containers, docker-compose allows one container to talk to another through the name of the service defined in the docker compose file. This means the web container can access the db container with the host &lt;code class=&quot;highlighter-rouge&quot;&gt;db:6379&lt;/code&gt; (as 6479 is the default redis port).&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Task: Go ahead and correct the host name in lib/app.rb to “db”.&lt;/strong&gt;&lt;/p&gt;
 
@@ -332,8 +332,8 @@
 &lt;p&gt;I hope you’ve enjoyed this workshop, and are now familiar with docker containers/images. In the next workshop, we’ll be deploying our docker container (somewhere, TBC).&lt;/p&gt;
 </description>
         <pubDate>Thu, 19 May 2016 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/docker/workshop/2016/05/19/docker-workshop-one.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/docker/workshop/2016/05/19/docker-workshop-one.html</guid>
+        <link>http://localhost:4000/docker/workshop/2016/05/19/docker-workshop-one.html</link>
+        <guid isPermaLink="true">http://localhost:4000/docker/workshop/2016/05/19/docker-workshop-one.html</guid>
         
         
         <category>docker</category>
@@ -351,57 +351,57 @@
 &lt;p&gt;The vocabulary that I’ve used for the various test doubles (mocks/stubs, etc) is described in &lt;a href=&quot;https://blog.8thlight.com/uncle-bob/2014/05/14/TheLittleMocker.html&quot;&gt;The Little Mocker&lt;/a&gt;, therefore I would encourage you to give that a read if you haven’t already done so.&lt;/p&gt;
 
 &lt;h1 id=&quot;mocking-collaborators&quot;&gt;Mocking Collaborators&lt;/h1&gt;
-&lt;p&gt;One of the fundamental axioms of object oriented programming is that a set of objects work together in order to achieve a particular goal. This has a profound effect on how we do our testing. When we are writing a test for a class &lt;code&gt;X&lt;/code&gt; that depends on class &lt;code&gt;Y&lt;/code&gt;, then the unit test for class &lt;code&gt;X&lt;/code&gt; also needs to be aware of this dependency.&lt;/p&gt;
+&lt;p&gt;One of the fundamental axioms of object oriented programming is that a set of objects work together in order to achieve a particular goal. This has a profound effect on how we do our testing. When we are writing a test for a class &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; that depends on class &lt;code class=&quot;highlighter-rouge&quot;&gt;Y&lt;/code&gt;, then the unit test for class &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; also needs to be aware of this dependency.&lt;/p&gt;
 
-&lt;p&gt;Let us imagine we are working on an &lt;code&gt;ATM&lt;/code&gt; class that models a cash machine which you can use to extract money from, view bank balances, and so on. Our &lt;code&gt;ATM&lt;/code&gt; class is going to be interacting with the &lt;code&gt;Bank&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Let us imagine we are working on an &lt;code class=&quot;highlighter-rouge&quot;&gt;ATM&lt;/code&gt; class that models a cash machine which you can use to extract money from, view bank balances, and so on. Our &lt;code class=&quot;highlighter-rouge&quot;&gt;ATM&lt;/code&gt; class is going to be interacting with the &lt;code class=&quot;highlighter-rouge&quot;&gt;Bank&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Unfortunately the &lt;code&gt;Bank&lt;/code&gt; communicates directly to various external systems, so we can’t easily use the real &lt;code&gt;Bank&lt;/code&gt; class in the unit test for our &lt;code&gt;ATM&lt;/code&gt;. Instead, we will be utilizing polymorphism and dependency injecting test doubles of &lt;code&gt;Bank&lt;/code&gt; into &lt;code&gt;ATM&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Unfortunately the &lt;code class=&quot;highlighter-rouge&quot;&gt;Bank&lt;/code&gt; communicates directly to various external systems, so we can’t easily use the real &lt;code class=&quot;highlighter-rouge&quot;&gt;Bank&lt;/code&gt; class in the unit test for our &lt;code class=&quot;highlighter-rouge&quot;&gt;ATM&lt;/code&gt;. Instead, we will be utilizing polymorphism and dependency injecting test doubles of &lt;code class=&quot;highlighter-rouge&quot;&gt;Bank&lt;/code&gt; into &lt;code class=&quot;highlighter-rouge&quot;&gt;ATM&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;There’s a few ways to create test doubles, but the more common way that I have observed is to use a mocking library, e.g. JMock/Mockito for Java, rspec-mocks for Ruby. The reason why this approach is so common is because it is relatively quick and easy to do. For example, to stub out the bank into returning bank account details for a particular bank account, we can do something as follows;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;shows balance&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test_bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:get_account_details&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;and_return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;balance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;previous_transactions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show_balance&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'shows balance'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test_bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:get_account_details&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;and_return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;balance: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;previous_transactions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]})&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;show_balance&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;This test knows a fair amount of information. It knows which methods get invoked when the atm is finding out the bank balance, as well the format of the response that &lt;code&gt;bank.get_account_details&lt;/code&gt; generates.&lt;/p&gt;
+&lt;p&gt;This test knows a fair amount of information. It knows which methods get invoked when the atm is finding out the bank balance, as well the format of the response that &lt;code class=&quot;highlighter-rouge&quot;&gt;bank.get_account_details&lt;/code&gt; generates.&lt;/p&gt;
 
-&lt;p&gt;It turns out that &lt;code&gt;get_account_details&lt;/code&gt; method on the &lt;code&gt;Bank&lt;/code&gt; is widely used across the system, and the mock setup we have used in the above test is duplicated in many places. What happens when &lt;code&gt;get_account_details&lt;/code&gt; undergoes some kind of change? What happens if the return value changes from a Hash to some other data type? It is true that a lot of the production code will need changing if this were to happen, but now each test must also be painstakingly updated to incorporate the change.&lt;/p&gt;
+&lt;p&gt;It turns out that &lt;code class=&quot;highlighter-rouge&quot;&gt;get_account_details&lt;/code&gt; method on the &lt;code class=&quot;highlighter-rouge&quot;&gt;Bank&lt;/code&gt; is widely used across the system, and the mock setup we have used in the above test is duplicated in many places. What happens when &lt;code class=&quot;highlighter-rouge&quot;&gt;get_account_details&lt;/code&gt; undergoes some kind of change? What happens if the return value changes from a Hash to some other data type? It is true that a lot of the production code will need changing if this were to happen, but now each test must also be painstakingly updated to incorporate the change.&lt;/p&gt;
 
 &lt;p&gt;Another disadvantage to using mocking libraries is the amount of test setup that they can require. It is not uncommon to see test code which heavily use mocking libraries to have a substantial amount of setup to ensure that all the methods on the test double have some default behaviour defined. For example, if we want to create our bank test double, we may have something as follows;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance_double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ATM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance_double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;let&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ATM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;before&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:get_account_details&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;and_return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;balance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:credit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:debit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:get_account_details&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;and_return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;balance: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:credit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;allow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:debit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;displays balance&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;show_balance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'displays balance'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;show_balance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;pays in money&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:credit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;account_number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pay_cheque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pays in money'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:credit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;account_number: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;123&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pay_cheque&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;123&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;extract money&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:debit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;account_number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;55555 0123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'extract money'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;receive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:debit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;account_number: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;55555 0123&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;extract_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Without this default setup, we may run into errors where methods are invoked on &lt;code&gt;Bank&lt;/code&gt; which have not yet been set up in the unit test. You may imagine this &lt;code&gt;before&lt;/code&gt; block becoming unwieldy as bank is utilized more by &lt;code&gt;ATM&lt;/code&gt;, as well as seeing this setup duplicated across other tests.&lt;/p&gt;
+&lt;p&gt;Without this default setup, we may run into errors where methods are invoked on &lt;code class=&quot;highlighter-rouge&quot;&gt;Bank&lt;/code&gt; which have not yet been set up in the unit test. You may imagine this &lt;code class=&quot;highlighter-rouge&quot;&gt;before&lt;/code&gt; block becoming unwieldy as bank is utilized more by &lt;code class=&quot;highlighter-rouge&quot;&gt;ATM&lt;/code&gt;, as well as seeing this setup duplicated across other tests.&lt;/p&gt;
 
 &lt;p&gt;So, what is the alternative?&lt;/p&gt;
 
-&lt;p&gt;We can instead hand roll a &lt;code&gt;FakeBank&lt;/code&gt; class that can be used across all classes.&lt;/p&gt;
+&lt;p&gt;We can instead hand roll a &lt;code class=&quot;highlighter-rouge&quot;&gt;FakeBank&lt;/code&gt; class that can be used across all classes.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakeBank&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FakeBank&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_account_details&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;balance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;account_number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123456&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;balance: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;account_number: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123456&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
   &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;credit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
@@ -411,37 +411,37 @@
   &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;debit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;vi&quot;&gt;@debit_transactions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transaction&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;What is the advantage of doing this? Well firstly, all mock behaviour in now defined in one place. If we we need to change the return value of &lt;code&gt;get_account_details&lt;/code&gt;, we can do that change here instead of multiple test files. Secondly, as we have complete control over this test double, we can add functionality in order to make it easier to work with in our tests. For example, we can query the &lt;code&gt;FakeBank&lt;/code&gt; for the previous transactions that have been made in order to check the ATM has debited money from a particular bank account for instance.&lt;/p&gt;
+&lt;p&gt;What is the advantage of doing this? Well firstly, all mock behaviour in now defined in one place. If we we need to change the return value of &lt;code class=&quot;highlighter-rouge&quot;&gt;get_account_details&lt;/code&gt;, we can do that change here instead of multiple test files. Secondly, as we have complete control over this test double, we can add functionality in order to make it easier to work with in our tests. For example, we can query the &lt;code class=&quot;highlighter-rouge&quot;&gt;FakeBank&lt;/code&gt; for the previous transactions that have been made in order to check the ATM has debited money from a particular bank account for instance.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;debits account&amp;#39;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;debit_transactions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;it&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'debits account'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;atm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;extract_money&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bank&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;debit_transactions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h1 id=&quot;loosely-coupled-data&quot;&gt;Loosely coupled data&lt;/h1&gt;
 &lt;p&gt;When we are writing unit tests, we typically want to work with some kind of data. Data manifests itself in various forms, for example domain models/value objects/hash-maps and so on. Data can sometimes be non-trivial to initialize, for instance where there are many data fields required to initialize said data. To solve this problem, it is not uncommon to use test doubles that are far easier to instantiate, and then only defining pertinent fields that are required for the test to pass.&lt;/p&gt;
 
-&lt;p&gt;Lets say we were to create a &lt;code&gt;Transaction&lt;/code&gt; data object that is to be utilized by our ATM. This can be achieved in ruby as follows;&lt;/p&gt;
+&lt;p&gt;Lets say we were to create a &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt; data object that is to be utilized by our ATM. This can be achieved in ruby as follows;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;transaction_double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;from_account&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;to_account&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;  &lt;span class=&quot;n&quot;&gt;transaction_double&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'from_account'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'to_account'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;The problem that I have encountered with this approach is that whenever more fields from the data object are invoked by the code under test, we have to keep adding setup behaviour to &lt;code&gt;transaction_double&lt;/code&gt;. The obvious alternative is to use real objects;&lt;/p&gt;
+&lt;p&gt;The problem that I have encountered with this approach is that whenever more fields from the data object are invoked by the code under test, we have to keep adding setup behaviour to &lt;code class=&quot;highlighter-rouge&quot;&gt;transaction_double&lt;/code&gt;. The obvious alternative is to use real objects;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;transaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from_account&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to_account&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;DateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;many_more&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;fields&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;  &lt;span class=&quot;n&quot;&gt;transaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;id: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from_account: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to_account: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;date: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;DateTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;many_more: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;fields&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;This is still not always ideal. Every time we want to create an &lt;code&gt;Transaction&lt;/code&gt; in our tests now must have this substantial amount of initialization. Our test code is also highly dependent on the constructor not changing. Any new mandatory constructor arguments added to &lt;code&gt;Transaction&lt;/code&gt; will break this test and any other tests creating &lt;code&gt;Transaction&lt;/code&gt;s, despite whether or not those new fields being used by code under test.&lt;/p&gt;
+&lt;p&gt;This is still not always ideal. Every time we want to create an &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt; in our tests now must have this substantial amount of initialization. Our test code is also highly dependent on the constructor not changing. Any new mandatory constructor arguments added to &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt; will break this test and any other tests creating &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt;s, despite whether or not those new fields being used by code under test.&lt;/p&gt;
 
 &lt;p&gt;What I find the best option is to extract the object initialization into a separate spec helper;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#some_bank_spec.rb&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;order&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create_transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;from_account&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;to_account&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#some_bank_spec.rb&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;order&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;create_transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'from_account'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'to_account'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;#order_spec_helper.rb&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;create_transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from_account&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to_account&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;DateTime&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;many_more&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;default fields&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;span class=&quot;no&quot;&gt;Transaction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;id: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;from_account: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;to_account: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;date: &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;DateTime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;amount: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;many_more: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;default fields&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attrs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Some advantages that I see with this approach are as follows;&lt;/p&gt;
 
@@ -450,7 +450,7 @@
     &lt;p&gt;All initialization is in one place. If a new mandatory data field is added, we only have one place to make a change.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;In our test code, we can create an &lt;code&gt;Transaction&lt;/code&gt; whereby we only need to specify the pertinent fields (if any) that we care about in the unit test. The undefined data fields take on a default value.&lt;/p&gt;
+    &lt;p&gt;In our test code, we can create an &lt;code class=&quot;highlighter-rouge&quot;&gt;Transaction&lt;/code&gt; whereby we only need to specify the pertinent fields (if any) that we care about in the unit test. The undefined data fields take on a default value.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;We are allowing our code under test to interact with our real data objects just as they would do in production. Test doubles can mask issues as the code is not being tested as thoroughly as it could be.&lt;/p&gt;
@@ -467,8 +467,8 @@
 &lt;p&gt;In my experience, I’ve found the techniques described in this article help prevent changes in the production code from rippling too heavily into the test code.&lt;/p&gt;
 </description>
         <pubDate>Mon, 29 Jun 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/testing/2015/06/29/loosely-coupled-testing.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/testing/2015/06/29/loosely-coupled-testing.html</guid>
+        <link>http://localhost:4000/testing/2015/06/29/loosely-coupled-testing.html</link>
+        <guid isPermaLink="true">http://localhost:4000/testing/2015/06/29/loosely-coupled-testing.html</guid>
         
         
         <category>testing</category>
@@ -503,11 +503,11 @@
 
 &lt;p&gt;Even though the exceptions were channelled to a single place, I still have this to do something like this whenever I work with IO;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-java&quot; data-lang=&quot;java&quot;&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;n&quot;&gt;FileUtils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;read&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;someFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;UncheckedIOException&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This makes the code look somewhat clumsy and untidy.&lt;/p&gt;
 
@@ -533,8 +533,8 @@
 &lt;p&gt;Your application must have a well designed exception handling process baked into its core architecture. When you suppress checked exceptions and start only having runtime exceptions flowing in your system, the more control you have on your application.&lt;/p&gt;
 </description>
         <pubDate>Tue, 09 Jun 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/checked/exceptions/2015/06/09/checked-exceptions.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/checked/exceptions/2015/06/09/checked-exceptions.html</guid>
+        <link>http://localhost:4000/checked/exceptions/2015/06/09/checked-exceptions.html</link>
+        <guid isPermaLink="true">http://localhost:4000/checked/exceptions/2015/06/09/checked-exceptions.html</guid>
         
         
         <category>checked</category>
@@ -553,8 +553,8 @@
 &lt;p&gt;Most software projects are composed of several major components, for example a web application would have the front-end code (HTML, CSS, JS), the back-end code (Rails/Sinatra), the database (SQL, NoSQL).&lt;/p&gt;
 </description>
         <pubDate>Fri, 22 May 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/2015/05/22/project-startup.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/2015/05/22/project-startup.html</guid>
+        <link>http://localhost:4000/2015/05/22/project-startup.html</link>
+        <guid isPermaLink="true">http://localhost:4000/2015/05/22/project-startup.html</guid>
         
         
       </item>
@@ -600,8 +600,8 @@
 &lt;p&gt;This algorithm can be applied in lots of dfferent areas. If you had a load of medical data for blood tests, you may expect a group of people with a particular disease to be clustered together if you were to plot that data in a graph.&lt;/p&gt;
 </description>
         <pubDate>Fri, 22 May 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/machine/learning/2015/05/22/k-nearest-neighbours.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/machine/learning/2015/05/22/k-nearest-neighbours.html</guid>
+        <link>http://localhost:4000/machine/learning/2015/05/22/k-nearest-neighbours.html</link>
+        <guid isPermaLink="true">http://localhost:4000/machine/learning/2015/05/22/k-nearest-neighbours.html</guid>
         
         
         <category>machine</category>
@@ -657,8 +657,8 @@
 &lt;p&gt;Coding is not a mechical task, but an intellectual task, and is important that we are at our most effective whilst doing this.&lt;/p&gt;
 </description>
         <pubDate>Mon, 27 Apr 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/software/development/2015/04/27/have-a-break.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/software/development/2015/04/27/have-a-break.html</guid>
+        <link>http://localhost:4000/software/development/2015/04/27/have-a-break.html</link>
+        <guid isPermaLink="true">http://localhost:4000/software/development/2015/04/27/have-a-break.html</guid>
         
         
         <category>software</category>
@@ -686,8 +686,8 @@
 &lt;p&gt;Unlike traditional OO languages, Clojure doesn’t have objects to contain private data, but there’s also a very small number of possible data structures that you can use. You have a hash-map/vector/list or some value (which would be strings, numbers, keywords, etc). Therefore if you were to change the data type, your choice is fairly limited.&lt;/p&gt;
 </description>
         <pubDate>Tue, 21 Apr 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/clojure/2015/04/21/clojure-data-structures.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/clojure/2015/04/21/clojure-data-structures.html</guid>
+        <link>http://localhost:4000/clojure/2015/04/21/clojure-data-structures.html</link>
+        <guid isPermaLink="true">http://localhost:4000/clojure/2015/04/21/clojure-data-structures.html</guid>
         
         
         <category>clojure</category>
@@ -703,17 +703,17 @@
 
 &lt;p&gt;To do the polymorphic dispatch, I have a dispatch method which picks out the &lt;code&gt;player_type&lt;/code&gt; value from the hash-map that is passed into it. For e.g, if I pass in &lt;code&gt;{:player_type :human}&lt;/code&gt;, it’ll look for the multimethod which has &lt;code&gt;:human&lt;/code&gt; label.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defmulti &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;get-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player-types&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-                         &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;player-types&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:player_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmulti&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;fn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player-types&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                         &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;player-types&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:player_type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;In order to call the method, you’d do something like this;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;nv&quot;&gt;player/get-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:player_type&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:human&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;n&quot;&gt;player/get-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:player_type&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:human&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This will eventually delegate the method call to the following;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defmethod &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player/get-move&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:human&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-move-logic-goes-here&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmethod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player/get-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:human&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get-move-logic-goes-here&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;I think this is really nice.&lt;/p&gt;
 
@@ -723,8 +723,8 @@
 
 &lt;p&gt;In my unit test, I declare a new method that my multimethod can dispatch to;&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defn &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;prepare-stub-player-move&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;next-move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;defmethod &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;player/get-move&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:stub-player&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;next-move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defn&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prepare-stub-player-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next-move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;defmethod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;player/get-move&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;no&quot;&gt;:stub-player&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;board&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next-move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;In order to use a stub player, firstly I pass in a player to my &lt;code&gt;play-turn&lt;/code&gt; function with the player_type &lt;code&gt;stub-player&lt;/code&gt;.&lt;/p&gt;
 
@@ -733,8 +733,8 @@
 &lt;p&gt;There we have it, stubbed multimethods in Clojure.&lt;/p&gt;
 </description>
         <pubDate>Mon, 20 Apr 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/clojure/2015/04/20/stubbing-multimethod.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/clojure/2015/04/20/stubbing-multimethod.html</guid>
+        <link>http://localhost:4000/clojure/2015/04/20/stubbing-multimethod.html</link>
+        <guid isPermaLink="true">http://localhost:4000/clojure/2015/04/20/stubbing-multimethod.html</guid>
         
         
         <category>clojure</category>
@@ -778,8 +778,8 @@
 &lt;p&gt;If you keep code simple and clean, it will be easy to change. Trying to preempt change can at times be necessary if you think it will save time in the future, but usually it should be largely avoided.&lt;/p&gt;
 </description>
         <pubDate>Tue, 14 Apr 2015 00:00:00 +0100</pubDate>
-        <link>http://yourdomain.com/software/development/2015/04/14/simplest-thing-possible.html</link>
-        <guid isPermaLink="true">http://yourdomain.com/software/development/2015/04/14/simplest-thing-possible.html</guid>
+        <link>http://localhost:4000/software/development/2015/04/14/simplest-thing-possible.html</link>
+        <guid isPermaLink="true">http://localhost:4000/software/development/2015/04/14/simplest-thing-possible.html</guid>
         
         
         <category>software</category>
