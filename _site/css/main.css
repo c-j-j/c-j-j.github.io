@@ -11,7 +11,7 @@ dl, dd, ol, ul, figure {
  * Basic styling
  */
 body {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
   font-weight: 300;
@@ -157,12 +157,11 @@ pre {
   line-height: 70px;
   letter-spacing: -1px;
   margin-bottom: 0;
+  color: #FDCA40;
   float: left; }
-  .site-title, .site-title:visited {
-    color: white;
+  .site-title, .site-title:visited, .site-title:hover {
+    color: #FDCA40;
     text-decoration: none; }
-  .site-title:hover {
-    text-decoration-color: #FDCA40; }
 
 .site-nav {
   float: right;
@@ -214,15 +213,19 @@ pre {
  * Site footer
  */
 .site-footer {
+  background-color: #31393C;
+  color: white;
   border-top: 1px solid #e8e8e8;
   padding: 20px 0; }
 
 .footer-heading {
+  color: #FDCA40;
   font-size: 18px;
   margin-bottom: 10px; }
 
 .contact-list,
 .social-media-list {
+  color: white;
   list-style: none;
   margin-left: 0; }
 
@@ -266,24 +269,60 @@ pre {
  * Page content
  */
 .page-content {
-  padding: 20px 0; }
+  padding: 20px 0;
+  background-color: #f6f6f6; }
 
 .page-heading {
-  font-size: 20px; }
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #31393C; }
 
 .post-list {
   margin-left: 0;
-  list-style: none; }
-  .post-list > li {
-    margin-bottom: 20px; }
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; }
+
+.post-item {
+  margin-bottom: 20px;
+  width: 33%;
+  min-width: 300px;
+  background-color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1), 1px 1px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px 5px 5px 0px;
+  color: #31393C;
+  transition: 0.2s; }
+  .post-item:hover {
+    text-decoration: none; }
+    .post-item:hover .post-date {
+      background-color: #FDCA40; }
+
+.post-date {
+  font-size: 14px;
+  color: white;
+  display: block;
+  background-color: #33A1FD;
+  padding: 0px 0.3rem;
+  border-radius: 0px 5px 0px 0px; }
 
 .post-meta {
   font-size: 14px;
-  color: #828282; }
+  color: black; }
 
 .post-link {
   display: block;
-  font-size: 24px; }
+  font-size: 24px;
+  padding: 0.3rem; }
+
+.post-item-title {
+  color: red;
+  text-decoration: none;
+  padding: 0.3rem; }
+  .post-item-title, .post-item-title:hover, .post-item-title:visited, .post-item-title:visited {
+    text-decoration: none;
+    color: inherit; }
 
 /**
  * Posts
@@ -292,6 +331,8 @@ pre {
   margin-bottom: 20px; }
 
 .post-title {
+  text-transform: uppercase;
+  color: #31393C;
   font-size: 42px;
   letter-spacing: -1px;
   line-height: 1; }
@@ -316,6 +357,10 @@ pre {
     @media screen and (max-width: 800px) {
       .post-content h4 {
         font-size: 18px; } }
+
+.post {
+  background-color: white;
+  padding: 0.5rem; }
 
 /**
  * Syntax highlighting styles
