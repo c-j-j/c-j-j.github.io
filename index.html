@@ -1,22 +1,71 @@
 ---
-layout: default
+layout: home
 ---
 
+<section class="hero">
+  <section class="hero__text">
+    <h1 class="hero__title">Chris Jordan</h1>
+    <h2 class="hero__subtitle">Software Craftsman</h2>
+  </section>
+</section>
 <div class="home">
+  <section class="about">
+    <img src="https://8thlight.com/images/team/chris-jordan-4997becf.jpg" alt="pic" class="about__pic circle-clip">
+    <p class="about__text">
+      Hello! Thanks for visiting. I am a <span>software craftsman</span> based in London. I have front-end skills, back-end skills, and devops. I have been writing software for over <span>5 years professionally</span>.
+    </p>
+  </section>
+  <section class="info info-altered">
+    <section class="info__text">
+      <h3 class="info__heading">Front end</h3>
+      <p>
+        I love front-end development, and crafting beautiful interfaces that people love to use. Here are some skills that I've been using a lot recently;
+      </p>
 
-  <h1 class="page-heading">Blog Posts</h1>
-
-  <section class="post-list">
-    {% for post in site.posts %}
-    <a class="post-item" href="{{ post.url | prepend: site.baseurl }}">
-      <span class="post-date">{{ post.date | date: "%-d %b %Y" }}</span>
-      <h3 class="post-item-title">
-        {{ post.title }}
-      </h3>
-    </a>
-    {% endfor %}
+      <ul>
+        <li>React</li>
+        <li>Angular</li>
+        <li>HTML5</li>
+        <li>CSS3</li>
+        <li>Electron</li>
+        <li>React Native</li>
+      </ul>
+    </section>
   </section>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+  <section class="info info--inverted">
+    <section class="info__text">
+      <h3 class="info__heading info__heading--inverted">Back end</h3>
+      <p>
+        I love front-end development, and crafting beautiful interfaces that people love to use. Here are some skills that I've been using a lot recently;
+      </p>
 
+      <ul>
+        <li>React</li>
+        <li>Angular</li>
+        <li>HTML5</li>
+        <li>CSS3</li>
+        <li>Electron</li>
+        <li>React Native</li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="info">
+    <section class="info__text">
+      <h3 class="info__heading">Devops</h3>
+      <p>
+        I love front-end development, and crafting beautiful interfaces that people love to use. Here are some skills that I've been using a lot recently;
+      </p>
+
+      <ul>
+        <li>React</li>
+        <li>Angular</li>
+        <li>HTML5</li>
+        <li>CSS3</li>
+        <li>Electron</li>
+        <li>React Native</li>
+      </ul>
+    </section>
+  </section>
 </div>

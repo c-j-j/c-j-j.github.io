@@ -1,0 +1,155 @@
+$grid-line: #f3f2f2;
+
+.hero {
+  background-size: 10px 10px;
+  background-image: linear-gradient(to right, $grid-line 1px, transparent 1px), linear-gradient(to bottom, $grid-line 1px, transparent 1px);
+  display: flex;
+  padding: 2rem 0;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+
+  &:before {
+    content: '';
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+  }
+
+  &__text {
+    font-size: 48px;
+    padding: 2rem 5px;
+    border: 10px solid black;
+    border-bottom: none;
+    position: relative;
+    width: 60%;
+    text-align: center;
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 20%;
+      border-bottom: 10px solid black;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20%;
+      border-bottom: 10px solid black;
+    }
+  }
+
+  &__title {
+    font-size: 4rem;
+    text-transform: uppercase;
+    color: $dark-grey;
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    position: absolute;
+    font-size: 2rem;
+    left: 0px;
+    right: 0px;
+    max-width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 1;
+    display: inline;
+    vertical-align: top;
+  }
+}
+
+.about {
+  max-width: 600px;
+  text-align: center;
+  margin: 0 auto;
+  padding: 2rem 0;
+
+  &__pic {
+    margin-bottom: 1rem;
+  }
+
+  &__text {
+    span {
+      color: $sky-blue;
+      font-weight: 700;
+    }
+  }
+}
+
+.circle-clip {
+  clip-path: circle();
+  max-width: 300px;
+}
+
+.info {
+  position: relative;
+  background: $dark-grey;
+  position: relative;
+  padding: 2rem;
+  color: white;
+
+  &__heading {
+    color: $yellow;
+    font-size: 3rem;
+    text-transform: uppercase;
+
+    &--inverted {
+      color: $sky-blue;
+    }
+  }
+
+  &__text {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+.info-altered {
+  position: relative;
+  padding: 3rem;
+  &:before {
+    content: '';
+    clip-path: polygon(0 0%, 100% 15%, 100% 0);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    position: absolute;
+  }
+
+  &:after {
+    content: '';
+    clip-path: polygon(0 94%, 0 100%, 100% 100%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    position: absolute;
+  }
+}
+
+.info--inverted {
+  background-color: white;
+  color: black;
+  text-align: right;
+
+  &__heading {
+    color: $sky-blue;
+    font-size: 3rem;
+    text-transform: uppercase;
+
+  }
+}
