@@ -5,15 +5,7 @@
     <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
 
     <nav class="site-nav">
-
-      <div class="trigger">
-        <a class="page-link" href="/blog.html">Blog</a>
-        {% for page in site.pages | sort:"order" %}
-          {% if page.title %}
-          <a class="page-link" href="{{ page.url | prepend: site.baseurl }}">{{ page.title }}</a>
-          {% endif %}
-        {% endfor %}
-      </div>
+      <a class="page-link" href="/blog.html">Blog</a>
     </nav>
 
   </div>
